@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Othello
+internal class Othello
 {
-    public OthelloColor Color { get; private set; } = OthelloColor.None;
+    internal OthelloColor Color { get; private set; } = OthelloColor.None;
 
-    public void Generate(OthelloColor color)
+    internal void Generate(OthelloColor color)
     {
         if (color == OthelloColor.None) return;
 
         Color = color;
     }
 
-    public void ChangeColor(OthelloColor color) 
+    internal void ChangeColor(OthelloColor color) 
     {
         if (Color == color) return;
 
@@ -21,7 +21,7 @@ public class Othello
     }
 }
 
-public enum OthelloColor
+internal enum OthelloColor
 {
     None,
     white,
