@@ -27,12 +27,20 @@ internal class Board
     internal Board()
     {
         _grid = new Othello[_sideLength, _sideLength];
+        for (int x = 0; x < _sideLength; x++)
+        {
+            for (int y = 0; y < _sideLength; y++)
+            {
+                _grid[x, y] = new Othello();
+            }
+        }
     }
 
     internal void SetOthello(Vector2Int position, OthelloColor color)
     {
         _grid[position.x, position.y].Generate(color);
-        UpdatePuttablePosition(position);
+        _setCandidates.Remove(position);
+        UpdateSetCandidate(position);
     }
 
     internal void ChangeColor(Vector2Int position)
@@ -49,33 +57,43 @@ internal class Board
 
     internal List<Vector2Int> GetPuttableGrid(OthelloColor turnColor)
     {
-        if (_setCandidates.Count == 0) return null;
-
         List<Vector2Int> puttablePositions = new List<Vector2Int>();
+
+        if (_setCandidates.Count == 0)
+            return puttablePositions;
+
         foreach (Vector2Int candidate in _setCandidates)
         {
-            for (int i = 0; i < _sideLength; i++)
+            Debug.Log(candidate);
+
+            for (int i = 0; i < _direction.Length; i++)
             {
                 Vector2Int pos = candidate;
-                bool canNotOut = true;
-                for (int j = 1; canNotOut; j++) // Maybe, this is Not good algorithm.
+                bool canOut = false;
+                for (int j = 1; j < _sideLength; j++) // Maybe, this is Not good algorithm.
                 {
-                    pos += j * _direction[i];
+                    pos += _direction[i];
                     if (!HasOthello(pos)) break;
 
                     bool isSame = _grid[pos.x, pos.y].Color == turnColor;
-                    if (j == 1 && !isSame) break;
-                    if (j != 1 && !isSame) continue;
+                    if(j == 1)
+                    {
+                        if (isSame) break;
+                        continue;
+                    }
+
+                    if (!isSame) continue;
 
                     puttablePositions.Add(candidate);
-                    canNotOut = false;
+                    canOut = true;
+                    break;
                 }
 
-                if (!canNotOut) break;
+                if (canOut) break;
             }
         }
 
-        return puttablePositions; // Completed?
+        return puttablePositions; // Completed
     }
 
     internal void GetInitialized()
@@ -83,18 +101,16 @@ internal class Board
         _isStarted = true;
     }
 
-    void UpdatePuttablePosition(Vector2Int position)
+    void UpdateSetCandidate(Vector2Int position)
     {
-        if (!_isStarted) return;
-
         for (int i = -1; i <= 1; i++)
         {
             for (int j = -1; j <= 1; j++) // 9 times loop
             {
                 if (i == 0 && j == 0) continue;
 
-                Vector2Int researchPosition = new Vector2Int(position.x, position.y);
-                if (IsInGrid(researchPosition)) continue;
+                Vector2Int researchPosition = new Vector2Int(position.x + i, position.y + j);
+                if (!IsInGrid(researchPosition)) continue;
                 if (HasOthello(researchPosition)) continue;
 
                 if (_setCandidates.Contains(researchPosition)) continue;
