@@ -13,15 +13,21 @@ internal class Othello
         Color = color;
     }
 
-    internal void ChangeColor(OthelloColor color) 
+    internal void ChangeColor() 
     {
-        if (Color == color) return;
-
-        Color = color;
+        if (Color == OthelloColor.None) return;
+        if (Color == OthelloColor.white)
+        {
+            Color = OthelloColor.black;
+        }
+        else
+        {
+            Color = OthelloColor.white;
+        }
     }
 }
 
-internal enum OthelloColor
+public enum OthelloColor
 {
     None,
     white,
