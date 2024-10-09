@@ -36,6 +36,11 @@ internal class Board
         }
     }
 
+    internal void GetInitialized()
+    {
+        _isStarted = true;
+    }
+
     internal void SetOthello(Vector2Int position, OthelloColor color)
     {
         _grid[position.x, position.y].Generate(color);
@@ -62,6 +67,7 @@ internal class Board
         if (_setCandidates.Count == 0)
             return puttablePositions;
 
+        // Maybe, this is Not good algorithm.
         foreach (Vector2Int candidate in _setCandidates)
         {
             Debug.Log(candidate);
@@ -70,7 +76,7 @@ internal class Board
             {
                 Vector2Int pos = candidate;
                 bool canOut = false;
-                for (int j = 1; j < _sideLength; j++) // Maybe, this is Not good algorithm.
+                for (int j = 1; j < _sideLength; j++) 
                 {
                     pos += _direction[i];
                     if (!HasOthello(pos)) break;
@@ -96,9 +102,38 @@ internal class Board
         return puttablePositions; // Completed
     }
 
-    internal void GetInitialized()
+    internal List<Vector2Int> GetChangeOthello(Vector2Int putPosition, OthelloColor putColor)
     {
-        _isStarted = true;
+        if (!IsInGrid(putPosition)) return null;
+
+        List<Vector2Int> changeOthellos = new List<Vector2Int>();
+
+        for (int i = 0; i < _direction.Length; i++)
+        {
+            Vector2Int pos = putPosition;
+            for (int j = 1; j < 8; j++)
+            {
+                pos += _direction[i];
+                if (!IsInGrid(pos)) break;
+
+                bool isSame = _grid[pos.x, pos.y].Color == putColor;
+                if (j == 1)
+                {
+                    if (isSame) break;
+                    continue;
+                }
+                if (!isSame) continue;
+
+                int lim = j;
+                for (int k = 1; k < lim; k++)
+                {
+                    Vector2Int change = putPosition + k * _direction[i];
+                    changeOthellos.Add(change);
+                }
+            }
+        }
+
+        return changeOthellos;
     }
 
     void UpdateSetCandidate(Vector2Int position)
