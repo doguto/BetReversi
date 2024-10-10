@@ -1,27 +1,25 @@
-using Codice.Client.BaseCommands.Download;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
 
-public class OthelloModel
+public static class ReversiModel
 {
-    readonly OthelloColor _white = OthelloColor.white;
-    readonly OthelloColor _black = OthelloColor.black;
+    private static readonly OthelloColor _white = OthelloColor.white;
+    private static readonly OthelloColor _black = OthelloColor.black;
 
-    readonly OthelloColor _firstTurn = OthelloColor.black;
-    OthelloColor _currentTurn = OthelloColor.None;
+    private static readonly OthelloColor _firstTurn = OthelloColor.black;
+    private static OthelloColor _currentTurn = OthelloColor.None;
 
-    Board _board;
+    private static Board _board;
 
-    Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
-    Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
+    private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
+    private static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
 
-    public IObservable<SetOthelloMessage> SetOthelloMessage => _setOthelloMessage;
-    public IObservable<ChangeColorMessage> ChangeColorMessage => _changeColorMessage;
+    public static IObservable<SetOthelloMessage> SetOthelloMessage => _setOthelloMessage;
+    public static IObservable<ChangeColorMessage> ChangeColorMessage => _changeColorMessage;
 
-    public OthelloModel()
+    static ReversiModel()
     {
         _board = new Board();
 
@@ -34,12 +32,12 @@ public class OthelloModel
         _currentTurn = _firstTurn;
     }
 
-    public void SetOthello(Vector2Int position)
+    public static void SetOthello(Vector2Int position)
     {
         SetOthello(position, _currentTurn);
     }
 
-    public void SetOthello(Vector2Int position, OthelloColor color)
+    public static void SetOthello(Vector2Int position, OthelloColor color)
     {
         if (_board.HasOthello(position)) return;
 
@@ -60,7 +58,7 @@ public class OthelloModel
         ChangeTurn();
     }
 
-    internal void ChangeOthelloColor(Vector2Int position)
+    internal static void ChangeOthelloColor(Vector2Int position)
     {
         if (_board.HasOthello(position)) return;
 
@@ -69,7 +67,7 @@ public class OthelloModel
         _changeColorMessage.OnNext(message);
     }
 
-    void ChangeTurn()
+    static void ChangeTurn()
     {
         if (_currentTurn == _white)
         {
