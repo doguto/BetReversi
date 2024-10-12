@@ -13,11 +13,11 @@ public static class ReversiModel
 
     private static Board _board;
 
-    private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
-    private static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
+    static Subject<SetOthelloMessage> setOthelloMessage = new Subject<SetOthelloMessage>();
+    static Subject<ChangeColorMessage> changeColorMessage = new Subject<ChangeColorMessage>();
 
-    public static IObservable<SetOthelloMessage> SetOthelloMessage => _setOthelloMessage;
-    public static IObservable<ChangeColorMessage> ChangeColorMessage => _changeColorMessage;
+    public static IObservable<SetOthelloMessage> SetOthelloMessage => setOthelloMessage;
+    public static IObservable<ChangeColorMessage> ChangeColorMessage => changeColorMessage;
 
     static ReversiModel()
     {
@@ -46,7 +46,7 @@ public static class ReversiModel
 
         var message = new SetOthelloMessage(position, color);
         _board.SetOthello(position, color);
-        _setOthelloMessage.OnNext(message);
+        setOthelloMessage.OnNext(message);
 
         List<Vector2Int> changeOhtellos = new List<Vector2Int>();
         changeOhtellos = _board.GetChangeOthello(position, color);
@@ -64,7 +64,7 @@ public static class ReversiModel
 
         var message = new ChangeColorMessage(position);
         _board.ChangeColor(position);
-        _changeColorMessage.OnNext(message);
+        changeColorMessage.OnNext(message);
     }
 
     static void ChangeTurn()
