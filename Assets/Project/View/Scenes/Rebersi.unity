@@ -223,6 +223,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5582633786630050373, guid: 319cfb4e99d73204caed4d04b7324cbf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5582633786630050373, guid: 319cfb4e99d73204caed4d04b7324cbf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5582633786630050373, guid: 319cfb4e99d73204caed4d04b7324cbf, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.6032112
       objectReference: {fileID: 0}
@@ -436,6 +444,10 @@ PrefabInstance:
     - target: {fileID: 3504978104154275607, guid: 625f9b3c497aa6c47ae360d1df79186d, type: 3}
       propertyPath: m_Name
       value: Othello
+      objectReference: {fileID: 0}
+    - target: {fileID: 3504978104154275607, guid: 625f9b3c497aa6c47ae360d1df79186d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

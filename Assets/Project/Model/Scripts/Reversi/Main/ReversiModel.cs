@@ -10,8 +10,10 @@ public static class ReversiModel
 
     private static readonly OthelloColor _firstTurn = OthelloColor.black;
     private static OthelloColor _currentTurn = OthelloColor.None;
+    private static bool _isStarted = false;
 
     private static Board _board;
+    private static ReversiPlayer _player;
 
     static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
     static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
@@ -22,6 +24,11 @@ public static class ReversiModel
     static ReversiModel()
     {
         _board = new Board();
+    }
+
+    public static void InitializeReversi(OthelloColor color, int othelloAmount)
+    {
+        _player = new ReversiPlayer(color, othelloAmount);
 
         SetOthello(new Vector2Int(3, 3), _black);
         SetOthello(new Vector2Int(3, 4), _white);
@@ -30,9 +37,17 @@ public static class ReversiModel
 
         _board.GetInitialized();
         _currentTurn = _firstTurn;
+        _isStarted = true;
     }
 
-    public static void SetOthello(Vector2Int position)
+    public static void SetPlayerOthello(Vector2Int position)
+    {
+        if (_player.PlayerColor != _currentTurn) return;
+
+        SetOthello(position, _currentTurn);
+    }
+
+    internal static void SetOthello(Vector2Int position)
     {
         SetOthello(position, _currentTurn);
     }
@@ -41,8 +56,11 @@ public static class ReversiModel
     {
         if (_board.HasOthello(position)) return;
 
-        var candidates = _board.GetPuttableGrid(color);
-        if (!candidates.Contains(position)) return;
+        if (_isStarted)
+        {
+            var candidates = _board.GetPuttableGrid(color);
+            if (!candidates.Contains(position)) return;
+        }
 
         var message = new SetOthelloMessage(position, color);
         _board.SetOthello(position, color);
@@ -50,9 +68,13 @@ public static class ReversiModel
 
         List<Vector2Int> changeOhtellos = new List<Vector2Int>();
         changeOhtellos = _board.GetChangeOthello(position, color);
-        foreach (Vector2Int pos in changeOhtellos)
+        if (changeOhtellos.Count != 0)
         {
-            ChangeOthelloColor(pos);
+            foreach (Vector2Int pos in changeOhtellos)
+            {
+                Debug.Log("Change Color Othello : " + pos);
+                ChangeOthelloColor(pos);
+            }
         }
 
         ChangeTurn();
@@ -60,9 +82,10 @@ public static class ReversiModel
 
     internal static void ChangeOthelloColor(Vector2Int position)
     {
-        if (_board.HasOthello(position)) return;
+        if (!_board.HasOthello(position)) return;
 
         var message = new ChangeColorMessage(position);
+        Debug.Log("Repeat Change Position : " + position);
         _board.ChangeColor(position);
         _changeColorMessage.OnNext(message);
     }
@@ -76,6 +99,15 @@ public static class ReversiModel
         else if (_currentTurn == _black)
         {
             _currentTurn = _white;
+        }
+
+        if (_currentTurn == _player.PlayerColor)
+        {
+            // wait for player input
+        }
+        else
+        {
+            //wait for Server input
         }
     }
 }

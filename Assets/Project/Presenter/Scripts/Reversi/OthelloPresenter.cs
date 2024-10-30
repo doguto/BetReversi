@@ -4,9 +4,9 @@ using UniRx;
 public class OthelloPresenter
 {
     public readonly Vector2Int position;
-    public ReactiveProperty<OthelloColor> color { get; private set; }
-
     readonly float _othelloRotateTime = 0.5f;
+
+    public ReactiveProperty<OthelloColor> color { get; private set; } = new ReactiveProperty<OthelloColor>();
 
 
     public OthelloPresenter(Vector2Int position, OthelloColor color)
@@ -14,7 +14,6 @@ public class OthelloPresenter
         this.position = position;
         this.color.Value = color;
     }
-    
 
     internal void ChangeColor()
     {

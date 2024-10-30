@@ -70,8 +70,6 @@ internal class Board
         // Maybe, this is Not good algorithm.
         foreach (Vector2Int candidate in _setCandidates)
         {
-            Debug.Log(candidate);
-
             for (int i = 0; i < _direction.Length; i++)
             {
                 Vector2Int pos = candidate;

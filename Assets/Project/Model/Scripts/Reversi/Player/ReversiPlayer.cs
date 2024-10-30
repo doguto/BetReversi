@@ -1,18 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 internal class ReversiPlayer
 {
     readonly int _minOthelloAmount = 0;
-    readonly OthelloColor _playerColor;
 
-    internal int CurrentOthelloAmount { get; private set; }
+    internal OthelloColor PlayerColor { get; private set; }
+    internal int CurrentOthelloAmount { get; private set; } = 0;
     
     internal ReversiPlayer(OthelloColor color, int othelloAmount)
     {
-        _playerColor = color;
+        PlayerColor = color;
         CurrentOthelloAmount = othelloAmount;
     }
 
@@ -20,7 +17,7 @@ internal class ReversiPlayer
     {
         if (CurrentOthelloAmount - usedAmount < _minOthelloAmount)
         {
-            Debug.LogError("Don't use Othello over an amount you have.");
+            Debug.LogError("Don't use Othello over the amount you have.");  
             return;
         }
 
