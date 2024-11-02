@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
+
 
 public static class ReversiModel
 {
@@ -42,6 +45,8 @@ public static class ReversiModel
         _currentTurn = _firstTurn;
         _puttableGrids = _board.GetPuttableGrid(_firstTurn);
         _isStarted = true;
+
+        StartTurn(_currentTurn);
     }
 
     public static void SetPlayerOthello(Vector2Int position)
@@ -88,6 +93,11 @@ public static class ReversiModel
     static void ChangeTurn()
     {
         _currentTurn = (_currentTurn == _white)? _black : _white;
+        StartTurn(_currentTurn);
+    }
+
+    static void StartTurn(OthelloColor turnColor)
+    {
         _puttableGrids = _board.GetPuttableGrid(_currentTurn);
         if (_puttableGrids.Count == 0)
         {
@@ -117,12 +127,43 @@ public static class ReversiModel
         NPC.SetRandomPosition(_puttableGrids);
     }
 
-    public static void EndRevesi()
+    static void ShowResult()
+    {
+        int whiteAmount = _board.GetOthelloAmount(_white);
+        int blackAmount = _board.GetOthelloAmount(_black);
+
+        Debug.Log("White Othello's number is : " + whiteAmount);
+        Debug.Log("Black Othello's number is : " + blackAmount);
+        OthelloColor winnerColor;
+        if (whiteAmount > blackAmount)
+        {
+            winnerColor = _white;
+            Debug.Log("Winner is White!");
+        }
+        else if (whiteAmount < blackAmount)
+        {   
+            winnerColor = _black;
+            Debug.Log("Winner is Black!");
+        }
+        else
+        {
+            winnerColor = OthelloColor.None;
+            Debug.Log("Draw!");
+        }
+    }
+
+    public static async void EndRevesi()
     {
         Debug.Log("--- --- --- --- ---");
         Debug.Log("Reversi is Over!!");
         Debug.Log("--- --- --- --- ---");
+        ShowResult();
 
+        var wait = Interval.Deray(5000);
+        await wait;
+        Debug.Log("App is Over.");
+
+        // 以下後で変更。本来はリバーシ終わってもアプリ終了させないので
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;//ゲームプレイ終了
 #else

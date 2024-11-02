@@ -1,4 +1,4 @@
-using System;
+//using System;
 using UnityEngine;
 using UniRx;
 
@@ -11,7 +11,8 @@ public class ReversiView : MonoBehaviour
 
     private void Start()
     {
-        InitializeReversi(OthelloColor.black, 32);
+        //InitializeReversi(OthelloColor.black, 32);
+        InitializeTest();
     }
 
     internal void InitializeReversi(OthelloColor playerColor, int othelloAmount)
@@ -19,7 +20,6 @@ public class ReversiView : MonoBehaviour
         _presenter = new ReversiPresenter();
         _presenter.OthelloPresenters.ObserveAdd().Subscribe((presenter) =>
         {
-            //Debug.Log("subscrive " + presenter.Value.color.Value);
             var othello = Instantiate(_othelloPrefab);
             if (presenter.Value.color.Value == OthelloColor.white)
             {
@@ -27,7 +27,16 @@ public class ReversiView : MonoBehaviour
             }
             othello.GetComponent<OthelloView>().Init(presenter.Value);
         });
-        //Debug.Log("initialize Reversi");
+
         _presenter.InitializeReversi(playerColor, othelloAmount);
+    }
+
+
+    void InitializeTest()
+    {
+        OthelloColor[] colors = { OthelloColor.white, OthelloColor.black };
+        int PlayerColorIndex = Random.Range(0, 2);
+        OthelloColor playerColor = colors[PlayerColorIndex];
+        InitializeReversi(playerColor, 32);
     }
 }
