@@ -23,7 +23,6 @@ public class OthelloView : MonoBehaviour
         //Debug.Log("make subscirber.");
         _presenter.color.Subscribe((color) =>
         {
-            Debug.Log("Subscribe Change Othello Color.");
             if (!_canSubscribe)
             {
                 _canSubscribe = true;

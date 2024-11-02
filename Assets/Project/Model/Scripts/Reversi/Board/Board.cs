@@ -74,8 +74,8 @@ internal class Board
             {
                 Vector2Int pos = candidate;
                 bool canOut = false;
-                for (int j = 1; j < _sideLength; j++) 
-                {
+                for (int j = 1; j < _sideLength; j++)
+                {   
                     pos += _direction[i];
                     if (!HasOthello(pos)) break;
 
@@ -102,9 +102,9 @@ internal class Board
 
     internal List<Vector2Int> GetChangeOthello(Vector2Int putPosition, OthelloColor putColor)
     {
-        if (!IsInGrid(putPosition)) return null;
+        List<Vector2Int> changeGrids = new List<Vector2Int>();
 
-        List<Vector2Int> changeOthellos = new List<Vector2Int>();
+        if (!IsInGrid(putPosition)) return changeGrids;
 
         for (int i = 0; i < _direction.Length; i++)
         {
@@ -113,6 +113,7 @@ internal class Board
             {
                 pos += _direction[i];
                 if (!IsInGrid(pos)) break;
+                if (!HasOthello(pos)) break;
 
                 bool isSame = _grid[pos.x, pos.y].Color == putColor;
                 if (j == 1)
@@ -122,16 +123,18 @@ internal class Board
                 }
                 if (!isSame) continue;
 
+                // sameColor othello merges in first time.
                 int lim = j;
                 for (int k = 1; k < lim; k++)
                 {
                     Vector2Int change = putPosition + k * _direction[i];
-                    changeOthellos.Add(change);
+                    changeGrids.Add(change);
                 }
+                break;
             }
         }
 
-        return changeOthellos;
+        return changeGrids;
     }
 
     void UpdateSetCandidate(Vector2Int position)
