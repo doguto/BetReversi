@@ -56,7 +56,7 @@ public static class ReversiModel
         SetOthello(position, _currentTurn);
     }
 
-    public static void SetOthello(Vector2Int position, OthelloColor color)
+    internal static void SetOthello(Vector2Int position, OthelloColor color)
     {
         if (_board.HasOthello(position)) return;
         if (_isStarted && !_puttableGrids.Contains(position)) return;
@@ -88,7 +88,6 @@ public static class ReversiModel
     static void ChangeTurn()
     {
         _currentTurn = (_currentTurn == _white)? _black : _white;
-
         _puttableGrids = _board.GetPuttableGrid(_currentTurn);
         if (_puttableGrids.Count == 0)
         {
@@ -113,6 +112,7 @@ public static class ReversiModel
             ChangeTurn();
             return;
         }
+
         Debug.Log("NPC's turn");
         NPC.SetRandomPosition(_puttableGrids);
     }
