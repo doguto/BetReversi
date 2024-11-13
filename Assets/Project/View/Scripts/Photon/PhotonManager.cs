@@ -6,10 +6,7 @@ using Photon.Realtime;
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] ReversiView _reversiView;
-    readonly string _roomName = "hoge";
-
-    bool _isMached = false;
-    bool _isInRoom = false;
+    readonly int _maxPlayerAmount = 2;
 
 
     private void Start()
@@ -29,12 +26,22 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log("Joined to Gaming room.");
         Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
         Debug.Log(PhotonNetwork.CurrentRoom.MaxPlayers);
-        _reversiView.InitializeReversi();
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount != _maxPlayerAmount) return;
+        PhotonNetwork.Instantiate("test", Vector3.zero, Quaternion.identity);
+        _reversiView.InitializeReversi(false);
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount != _maxPlayerAmount) return;
+        PhotonNetwork.Instantiate("test", Vector3.zero, Quaternion.identity);
+        _reversiView.InitializeReversi(false);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 2 }, TypedLobby.Default);
+        PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = _maxPlayerAmount }, TypedLobby.Default);
         Debug.Log(message);
     }
 
