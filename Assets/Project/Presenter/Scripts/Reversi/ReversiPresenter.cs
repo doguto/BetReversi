@@ -12,9 +12,9 @@ public class ReversiPresenter
         //ReversiModel.InitializeReversi();
     }
 
-    public void InitializeReversi(OthelloColor playerColor, int othelloAmount)
+    public void InitializeReversi(OthelloColor playerColor, int othelloAmount, bool isSoloGame)
     {
-        ReversiModel.InitializeReversi(playerColor, othelloAmount);
+        ReversiModel.InitializeReversi(playerColor, othelloAmount, isSoloGame);
     }
 
     void SetOthello(SetOthelloMessage message)

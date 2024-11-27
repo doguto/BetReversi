@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "543698430666",
+    "project_id": "betreversi",
+    "storage_bucket": "betreversi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:543698430666:android:51f59f93d5ed8156d82233",
+        "android_client_info": {
+          "package_name": "com.kuto.betreversi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACfBJUI7-XmprSrg49m9MMXhbtBURhiC8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
