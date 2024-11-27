@@ -9,6 +9,7 @@ public class ReversiView : MonoBehaviour
     ReversiPresenter _presenter;
     OthelloColor _playerColor = OthelloColor.white; // temp
     int _othelloAmount = 32; // temp
+    bool _isSoloGame = true;
 
     readonly Vector3 _whiteAngle = new Vector3(0, 180, 0);
 
@@ -20,7 +21,15 @@ public class ReversiView : MonoBehaviour
 
     internal void InitializeReversi()
     {
+        InitializeReversi(true);
+    }
+
+    internal void InitializeReversi(bool isSoloGame)
+    {
+        _isSoloGame = isSoloGame;
         _boardView.InitializeBoard();
+
+        if (!_isSoloGame) DecidePlayerColor();
 
         _presenter = new ReversiPresenter();
         _presenter.OthelloPresenters.ObserveAdd().Subscribe((presenter) =>
@@ -33,9 +42,16 @@ public class ReversiView : MonoBehaviour
             othello.GetComponent<OthelloView>().Init(presenter.Value);
         });
 
-        _presenter.InitializeReversi(_playerColor, _othelloAmount);
+        _presenter.InitializeReversi(_playerColor, _othelloAmount, _isSoloGame);
     }
 
+    void DecidePlayerColor()
+    {
+        OthelloColor[] colors = { OthelloColor.white, OthelloColor.black };
+        int PlayerColorIndex = Random.Range(0, 2);
+        _playerColor = colors[PlayerColorIndex];
+    }
+    
 
     void InitializeTest()
     {

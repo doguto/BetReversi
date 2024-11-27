@@ -3,11 +3,21 @@ using Photon.Pun;
 using Photon.Realtime;
 
 
-public class PhotonManager : MonoBehaviourPunCallbacks
+public class PhotonGate : MonoBehaviourPunCallbacks
 {
     [SerializeField] ReversiView _reversiView;
     readonly int _maxPlayerAmount = 2;
 
+    bool _isStarted = false;
+
+    private void StartGame()
+    {
+        if (_isStarted) return;
+
+        _isStarted = true;
+        //PhotonNetwork.Instantiate("test", Vector3.zero, Quaternion.identity);
+        _reversiView.InitializeReversi(false);
+    }
 
     private void Start()
     {
@@ -28,15 +38,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log(PhotonNetwork.CurrentRoom.MaxPlayers);
 
         if (PhotonNetwork.CurrentRoom.PlayerCount != _maxPlayerAmount) return;
-        PhotonNetwork.Instantiate("test", Vector3.zero, Quaternion.identity);
-        _reversiView.InitializeReversi(false);
+        StartGame();
+        Debug.Log("my player");
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         if (PhotonNetwork.CurrentRoom.PlayerCount != _maxPlayerAmount) return;
         PhotonNetwork.Instantiate("test", Vector3.zero, Quaternion.identity);
-        _reversiView.InitializeReversi(false);
+        StartGame();
+        Debug.Log("other player");
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
