@@ -11,7 +11,7 @@ internal class Board
 
     bool _isStarted = false;
 
-    readonly int _sideLength = 8;
+    public readonly int _sideLength = 8;
     readonly Vector2Int[] _direction =
     {
         new Vector2Int(0, 1), //north

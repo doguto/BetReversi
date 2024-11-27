@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
-using System.Threading.Tasks;
-using JetBrains.Annotations;
 
 
 public static class ReversiModel
@@ -12,15 +10,15 @@ public static class ReversiModel
     private static readonly OthelloColor _black = OthelloColor.black;
 
     private static readonly OthelloColor _firstTurn = OthelloColor.black;
-
     private static OthelloColor _currentTurn = OthelloColor.None;
-    private static List<Vector2Int> _puttableGrids = new List<Vector2Int>();
 
+    private static readonly Board _board;
+    private static ReversiPlayer _player;
+
+    private static List<Vector2Int> _puttableGrids = new List<Vector2Int>();
     private static bool _isStarted = false;
     private static bool _canNotSet = false;
-
-    private static Board _board;
-    private static ReversiPlayer _player;
+    private static bool _isSoloGame = false;
 
     private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
     private static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
@@ -35,9 +33,10 @@ public static class ReversiModel
         _board = new Board();
     }
 
-    public static void InitializeReversi(OthelloColor color, int othelloAmount)
+    public static void InitializeReversi(OthelloColor color, int othelloAmount, bool isSoloGame)
     {
         _player = new ReversiPlayer(color, othelloAmount);
+        _isSoloGame = isSoloGame;
 
         SetOthello(new Vector2Int(3, 3), _black);
         SetOthello(new Vector2Int(3, 4), _white);
@@ -55,7 +54,12 @@ public static class ReversiModel
     public static void SetPlayerOthello(Vector2Int position)
     {
         if (_player.PlayerColor != _currentTurn) return;
+        SetOthello(position, _currentTurn);
+    }
 
+    public static void SetOpponentOthello(Vector2Int position)
+    {
+        if (_player.PlayerColor == _currentTurn) return;
         SetOthello(position, _currentTurn);
     }
 
@@ -118,14 +122,9 @@ public static class ReversiModel
         _canNotSet = false;
 
         if (_currentTurn == _player.PlayerColor) return;
+        if (!_isSoloGame) return;
 
         // wait a NPC Input.
-        if (_puttableGrids.Count == 0)
-        {
-            ChangeTurn();
-            return;
-        }
-
         Debug.Log("NPC's turn");
         NPC.SetRandomPosition(_puttableGrids);
     }
@@ -176,3 +175,6 @@ public static class ReversiModel
 #endif
     }
 }
+
+
+

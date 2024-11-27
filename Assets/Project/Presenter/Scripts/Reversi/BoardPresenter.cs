@@ -4,17 +4,25 @@ using UniRx;
 
 public class BoardPresenter
 {
-    internal Subject<Vector2Int> mouseInput;
-    public IObserver<Vector2Int> MouseInput => mouseInput;
+    private Subject<Vector2Int> _mouseInput;
+    private Subject<Vector2Int> _opponentInput;
+    public IObserver<Vector2Int> MouseInput => _mouseInput;
+    public IObserver<Vector2Int> OpponentInput => _opponentInput;
 
 
     public BoardPresenter()
     {
-        mouseInput = new Subject<Vector2Int>();
-        mouseInput.Subscribe((pos) =>
+        _mouseInput = new Subject<Vector2Int>();
+        _opponentInput = new Subject<Vector2Int>();
+        _mouseInput.Subscribe((pos) =>
         {
             //call model setOthello() ...etc 
             ReversiModel.SetPlayerOthello(pos);
+        });
+        _opponentInput.Subscribe((pos) =>
+        {
+            Vector2Int transedPos = new Vector2Int(8 - pos.x, 8 - pos.y);
+            ReversiModel.SetOpponentOthello(transedPos);
         });
     }
 }
