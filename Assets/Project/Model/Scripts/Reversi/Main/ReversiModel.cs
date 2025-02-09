@@ -20,6 +20,8 @@ public static class ReversiModel
     private static bool _canNotSet = false;
     private static bool _isSoloGame = false;
 
+    public static int Length => 8;
+
     private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
     private static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
     private static Subject<ReversiResultMessage> _reversiResultMessage = new Subject<ReversiResultMessage>();
@@ -43,7 +45,7 @@ public static class ReversiModel
         SetOthello(new Vector2Int(4, 3), _white);
         SetOthello(new Vector2Int(4, 4), _black);
 
-        _board.GetInitialized();
+        _board.Initialize();
         _currentTurn = _firstTurn;
         _puttableGrids = _board.GetPuttableGrid(_firstTurn);
         _isStarted = true;
@@ -97,7 +99,7 @@ public static class ReversiModel
         _changeColorMessage.OnNext(message);
     }
 
-    static void ChangeTurn()
+    public static void ChangeTurn()
     {
         _currentTurn = (_currentTurn == _white)? _black : _white;
         StartTurn(_currentTurn);
@@ -152,8 +154,6 @@ public static class ReversiModel
             winnerColor = OthelloColor.None;
             Debug.Log("Draw!");
         }
-
-
     }
 
     public static async void EndRevesi()

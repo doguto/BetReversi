@@ -11,7 +11,7 @@ internal class Board
 
     bool _isStarted = false;
 
-    public readonly int _sideLength = 8;
+    public readonly int _sideLength = ReversiModel.Length;
     readonly Vector2Int[] _direction =
     {
         new Vector2Int(0, 1), //north
@@ -36,7 +36,7 @@ internal class Board
         }
     }
 
-    internal void GetInitialized()
+    internal void Initialize()
     {
         _isStarted = true;
     }
