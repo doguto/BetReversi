@@ -11,7 +11,7 @@ internal class Board
 
     bool _isStarted = false;
 
-    readonly int _sideLength = 8;
+    public readonly int _sideLength = ReversiModel.Length;
     readonly Vector2Int[] _direction =
     {
         new Vector2Int(0, 1), //north
@@ -36,14 +36,14 @@ internal class Board
         }
     }
 
-    internal void GetInitialized()
+    internal void Initialize()
     {
         _isStarted = true;
     }
 
     internal void SetOthello(Vector2Int position, OthelloColor color)
     {
-        _grid[position.x, position.y].Generate(color);
+        _grid[position.x, position.y].Generate(color, 1); // later , need to make codes for othello amount.
         _setCandidates.Remove(position);
         UpdateSetCandidate(position);
     }
@@ -135,6 +135,23 @@ internal class Board
         }
 
         return changeGrids;
+    }
+
+    internal int GetOthelloAmount(OthelloColor color)
+    {
+        int amount = 0;
+        for (int y = 0; y < _sideLength; y++)
+        {
+            for (int x = 0; x < _sideLength; x++)
+            {
+                OthelloColor gridColor = _grid[x, y].Color;
+                if (gridColor != color) continue;
+
+                amount += _grid[x, y].Amount;
+            }
+        }
+
+        return amount;
     }
 
     void UpdateSetCandidate(Vector2Int position)

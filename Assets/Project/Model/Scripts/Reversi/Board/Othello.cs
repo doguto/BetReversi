@@ -9,11 +9,14 @@ internal class Othello
     readonly OthelloColor _none = OthelloColor.None;
     internal OthelloColor Color { get; private set; } = OthelloColor.None;
 
-    internal void Generate(OthelloColor color)
+    internal int Amount { get; private set; }
+
+    internal void Generate(OthelloColor color, int amount)
     {
         if (color == _none) return;
 
         Color = color;
+        this.Amount = amount;
     }
 
     internal void ChangeColor() 
