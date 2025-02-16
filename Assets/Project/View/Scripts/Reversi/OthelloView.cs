@@ -4,23 +4,20 @@ using DG.Tweening;
 
 public class OthelloView : MonoBehaviour
 {
-    readonly Vector3 _rotateVector = new Vector3(0, 180, 0);
-    readonly float _rotateTime = 0.5f;
+    readonly Vector3 RotateVector = new Vector3(0, 180, 0);
+    readonly float RotateTime = 0.5f;
 
     OthelloPresenter _presenter;
     Transform _transform;
     bool _canSubscribe;
 
 
-    internal void Init(OthelloPresenter presenter)
+    internal void Init(OthelloPresenter presenter, int othelloAmount = 1)
     {
         _transform = transform;
-        _transform.position = new Vector3 (presenter.position.x, presenter.position.y, 0);
         _canSubscribe = false;
-        //Debug.Log(this.transform.localEulerAngles);
-
         _presenter = presenter;
-        //Debug.Log("make subscirber.");
+
         _presenter.color.Subscribe((color) =>
         {
             if (!_canSubscribe)
@@ -29,9 +26,7 @@ public class OthelloView : MonoBehaviour
                 return;
             }
 
-            //Debug.Log("changed to " + color);
-            _transform.DOLocalRotate(_transform.localEulerAngles + _rotateVector, _rotateTime);
-            //Debug.Log(this.transform.eulerAngles);
+            _transform.DOLocalRotate(_transform.localEulerAngles + RotateVector, RotateTime);
         });
     }
 }

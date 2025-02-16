@@ -4,26 +4,21 @@ using UnityEngine;
 
 internal class Othello
 {
-    readonly OthelloColor _white = OthelloColor.white;
-    readonly OthelloColor _black = OthelloColor.black;
-    readonly OthelloColor _none = OthelloColor.None;
     internal OthelloColor Color { get; private set; } = OthelloColor.None;
 
     internal int Amount { get; private set; }
 
     internal void Generate(OthelloColor color, int amount)
     {
-        if (color == _none) return;
-
+        if (color == ReversiModel.None) return;
         Color = color;
-        this.Amount = amount;
+        Amount = amount;
     }
 
     internal void ChangeColor() 
     {
-        if (Color == _none) return;
-
-        Color = (Color == _white)? _black : _white;
+        if (Color == ReversiModel.None) return;
+        Color = (Color == ReversiModel.White)? ReversiModel.Black : ReversiModel.White;
     }
 }
 

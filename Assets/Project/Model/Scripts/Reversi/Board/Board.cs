@@ -5,7 +5,7 @@ using UnityEngineInternal;
 
 internal class Board
 {
-    Othello[,] _grid;
+    readonly Othello[,] Grid;
     List<Vector2Int> _setCandidates = new List<Vector2Int>();
     internal List<Vector2Int> SettablePositions { get; private set; }
 
@@ -26,12 +26,12 @@ internal class Board
 
     internal Board()
     {
-        _grid = new Othello[_sideLength, _sideLength];
+        Grid = new Othello[_sideLength, _sideLength];
         for (int x = 0; x < _sideLength; x++)
         {
             for (int y = 0; y < _sideLength; y++)
             {
-                _grid[x, y] = new Othello();
+                Grid[x, y] = new Othello();
             }
         }
     }
@@ -43,20 +43,20 @@ internal class Board
 
     internal void SetOthello(Vector2Int position, OthelloColor color)
     {
-        _grid[position.x, position.y].Generate(color, 1); // later , need to make codes for othello amount.
+        Grid[position.x, position.y].Generate(color, 1); // later , need to make codes for othello amount.
         _setCandidates.Remove(position);
         UpdateSetCandidate(position);
     }
 
     internal void ChangeColor(Vector2Int position)
     {
-        _grid[position.x, position.y].ChangeColor();
+        Grid[position.x, position.y].ChangeColor();
     }
 
     internal bool HasOthello(Vector2Int position)
     {
         if (!IsInGrid(position)) return false;
-        if (_grid[position.x, position.y].Color == OthelloColor.None) return false;
+        if (Grid[position.x, position.y].Color == OthelloColor.None) return false;
         return true;
     }
 
@@ -79,7 +79,7 @@ internal class Board
                     pos += _direction[i];
                     if (!HasOthello(pos)) break;
 
-                    bool isSame = _grid[pos.x, pos.y].Color == turnColor;
+                    bool isSame = Grid[pos.x, pos.y].Color == turnColor;
                     if(j == 1)
                     {
                         if (isSame) break;
@@ -115,7 +115,7 @@ internal class Board
                 if (!IsInGrid(pos)) break;
                 if (!HasOthello(pos)) break;
 
-                bool isSame = _grid[pos.x, pos.y].Color == putColor;
+                bool isSame = Grid[pos.x, pos.y].Color == putColor;
                 if (j == 1)
                 {
                     if (isSame) break;
@@ -144,10 +144,10 @@ internal class Board
         {
             for (int x = 0; x < _sideLength; x++)
             {
-                OthelloColor gridColor = _grid[x, y].Color;
+                OthelloColor gridColor = Grid[x, y].Color;
                 if (gridColor != color) continue;
 
-                amount += _grid[x, y].Amount;
+                amount += Grid[x, y].Amount;
             }
         }
 
