@@ -8,7 +8,7 @@ using System.Threading;
 public class PhotonGate : MonoBehaviourPunCallbacks
 {
     [SerializeField] ReversiView _reversiView;
-    readonly int _maxPlayerAmount = 2;
+    readonly int MaxPlayerAmount = 2;
 
     bool _isStarted = false;
 
@@ -17,6 +17,14 @@ public class PhotonGate : MonoBehaviourPunCallbacks
     {
         Debug.Log("Try to connect PUN2.");
         PhotonNetwork.ConnectUsingSettings();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            StartGame(true, true);
+        }
     }
 
 
@@ -53,7 +61,7 @@ public class PhotonGate : MonoBehaviourPunCallbacks
         Debug.Log($"PlayerCount: {PhotonNetwork.CurrentRoom.PlayerCount}");
         Debug.Log($"MaxPlayerAmount: {PhotonNetwork.CurrentRoom.MaxPlayers}");
 
-        if (PhotonNetwork.CurrentRoom.PlayerCount != _maxPlayerAmount)
+        if (PhotonNetwork.CurrentRoom.PlayerCount != MaxPlayerAmount)
         {
             // var soloGame = Task.Run(() => StartSoloGame());
             return;
@@ -65,14 +73,14 @@ public class PhotonGate : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        if (PhotonNetwork.CurrentRoom.PlayerCount != _maxPlayerAmount) return;
+        if (PhotonNetwork.CurrentRoom.PlayerCount != MaxPlayerAmount) return;
         StartGame(false, true);
         Debug.Log("other player");
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = _maxPlayerAmount }, TypedLobby.Default);
+        PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = MaxPlayerAmount }, TypedLobby.Default);
         Debug.Log(message);
     }
 }

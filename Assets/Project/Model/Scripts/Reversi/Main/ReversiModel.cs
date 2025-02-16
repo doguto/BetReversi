@@ -2,25 +2,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System;
-
+using Cysharp.Threading.Tasks;
 
 public static class ReversiModel
 {
-    private static readonly OthelloColor _white = OthelloColor.white;
-    private static readonly OthelloColor _black = OthelloColor.black;
+    public static readonly OthelloColor White = OthelloColor.white;
+    public static readonly OthelloColor Black = OthelloColor.black;
+    public static readonly OthelloColor None = OthelloColor.None;
 
-    private static readonly OthelloColor _firstTurn = OthelloColor.black;
-    private static OthelloColor _currentTurn = OthelloColor.None;
+    public static readonly OthelloColor FirstTurn = OthelloColor.black;
+    public static readonly int Length = 8;
+    public static readonly int MaxBetAmount = 10;
+    public static readonly int DefaultOthelloAmount = 32;
 
-    private static readonly Board _board;
+    private static readonly Board Board;
     private static ReversiPlayer _player;
-
-    private static List<Vector2Int> _puttableGrids = new List<Vector2Int>();
-    private static bool _isStarted = false;
-    private static bool _canNotSet = false;
-    private static bool _isSoloGame = false;
-
-    public static int Length => 8;
 
     private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
     private static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
@@ -30,9 +26,16 @@ public static class ReversiModel
     public static IObservable<ChangeColorMessage> ChangeColorMessage => _changeColorMessage;
     public static IObservable<ReversiResultMessage> ReversiResultMessage => _reversiResultMessage;
 
+    private static List<Vector2Int> _puttableGrids = new List<Vector2Int>();
+    private static OthelloColor _currentTurn;
+    private static bool _isStarted = false;
+    private static bool _isSoloGame = false;
+    private static bool _canNotSet = false;
+
+
     static ReversiModel()
     {
-        _board = new Board();
+        Board = new Board();
     }
 
     public static void InitializeReversi(OthelloColor color, int othelloAmount, bool isSoloGame)
@@ -40,50 +43,80 @@ public static class ReversiModel
         _player = new ReversiPlayer(color, othelloAmount);
         _isSoloGame = isSoloGame;
 
-        SetOthello(new Vector2Int(3, 3), _black);
-        SetOthello(new Vector2Int(3, 4), _white);
-        SetOthello(new Vector2Int(4, 3), _white);
-        SetOthello(new Vector2Int(4, 4), _black);
+        SetOthello(new Vector2Int(3, 3), Black, false);
+        SetOthello(new Vector2Int(3, 4), White, false);
+        SetOthello(new Vector2Int(4, 3), White, false);
+        SetOthello(new Vector2Int(4, 4), Black, false);
 
-        _board.Initialize();
-        _currentTurn = _firstTurn;
-        _puttableGrids = _board.GetPuttableGrid(_firstTurn);
+        Board.Initialize();
+        _currentTurn = FirstTurn;
+        _puttableGrids = Board.GetPuttableGrid(FirstTurn);
         _isStarted = true;
 
         StartTurn(_currentTurn);
     }
 
-    public static void SetPlayerOthello(Vector2Int position)
+    public static async void SetPlayerOthello(Vector2Int position)
     {
-        if (_player.PlayerColor != _currentTurn) return;
-        SetOthello(position, _currentTurn);
+        if (_player.PlayerColor != _currentTurn) return;        
+        if (Board.HasOthello(position)) return;
+        if (_isStarted && !_puttableGrids.Contains(position)) return;
+
+
+        /// ‰ª•‰∏ãÁêÜÊÉ≥„ÅÆÂá¶ÁêÜ
+        UpDownButtonModel upDownButton = new UpDownButtonModel();
+        CheckButtonModel confirmationButton = new CheckButtonModel();
+        var message = new SetOthelloMessage(position, _currentTurn, confirmationButton, upDownButton);
+        Board.SetOthello(position, _currentTurn);
+        _setOthelloMessage.OnNext(message);
+        await UniTask.WaitUntil(() => confirmationButton.isChecked);  // confirmButton„ÅÆÂÖ•Âäõ„ÇíUniRx„Çí‰ªã„Åó„Å¶Âèó„ÅëÂèñ„Çã„ÄÇ
+        int betAmount = upDownButton.Value;
+        upDownButton = null;
+        confirmationButton = null;
+
+        List<Vector2Int> changeOthellos = new List<Vector2Int>();
+        changeOthellos = Board.GetChangeOthello(position, _currentTurn);
+        if (changeOthellos.Count == 0) return;
+
+        foreach (Vector2Int pos in changeOthellos)
+        {
+            ChangeOthelloColor(pos);
+        }
+        ChangeTurn();
+    
     }
 
     public static void SetOpponentOthello(Vector2Int position)
     {
-        if (_player.PlayerColor == _currentTurn) return;
-        SetOthello(position, _currentTurn);
+        if (_currentTurn == _player.PlayerColor) return;
+        SetOthello(position, _currentTurn, false);
     }
 
-    internal static void SetOthello(Vector2Int position)
+    internal static void SetOthello(Vector2Int position, bool byPlayer = false)
     {
-        SetOthello(position, _currentTurn);
+        SetOthello(position, _currentTurn, byPlayer);
     }
 
-    internal static void SetOthello(Vector2Int position, OthelloColor color)
+    async internal static void SetOthello(Vector2Int position, OthelloColor color, bool byPlayer = false)
     {
-        if (_board.HasOthello(position)) return;
+        if (Board.HasOthello(position)) return;
         if (_isStarted && !_puttableGrids.Contains(position)) return;
 
-        var message = new SetOthelloMessage(position, color);
-        _board.SetOthello(position, color);
+        var message = new SetOthelloMessage(position, color, byPlayer);
+        Board.SetOthello(position, color);
         _setOthelloMessage.OnNext(message);
 
-        List<Vector2Int> changeOhtellos = new List<Vector2Int>();
-        changeOhtellos = _board.GetChangeOthello(position, color);
-        if (changeOhtellos.Count == 0) return;
+        if (byPlayer)
+        {
 
-        foreach (Vector2Int pos in changeOhtellos)
+            await UniTask.WaitUntil(() => true);  // confirmButton„ÅÆÂÖ•Âäõ„ÇíUniRx„Çí‰ªã„Åó„Å¶Âèó„ÅëÂèñ„Çã„ÄÇ
+        }
+
+        List<Vector2Int> changeOthellos = new List<Vector2Int>();
+        changeOthellos = Board.GetChangeOthello(position, color);
+        if (changeOthellos.Count == 0) return;
+
+        foreach (Vector2Int pos in changeOthellos)
         {
             ChangeOthelloColor(pos);
         }
@@ -92,22 +125,22 @@ public static class ReversiModel
 
     internal static void ChangeOthelloColor(Vector2Int position)
     {
-        if (!_board.HasOthello(position)) return;
+        if (!Board.HasOthello(position)) return;
 
         var message = new ChangeColorMessage(position);
-        _board.ChangeColor(position);
+        Board.ChangeColor(position);
         _changeColorMessage.OnNext(message);
     }
 
     public static void ChangeTurn()
     {
-        _currentTurn = (_currentTurn == _white)? _black : _white;
+        _currentTurn = (_currentTurn == White)? Black : White;
         StartTurn(_currentTurn);
     }
 
     static void StartTurn(OthelloColor turnColor)
     {
-        _puttableGrids = _board.GetPuttableGrid(_currentTurn);
+        _puttableGrids = Board.GetPuttableGrid(_currentTurn);
         if (_puttableGrids.Count == 0)
         {
             Debug.Log("Player '" + _currentTurn + "' can't put any othello.");
@@ -133,20 +166,20 @@ public static class ReversiModel
 
     static void ShowResult()
     {
-        int whiteAmount = _board.GetOthelloAmount(_white);
-        int blackAmount = _board.GetOthelloAmount(_black);
+        int whiteAmount = Board.GetOthelloAmount(White);
+        int blackAmount = Board.GetOthelloAmount(Black);
 
         Debug.Log("White Othello's number is : " + whiteAmount);
         Debug.Log("Black Othello's number is : " + blackAmount);
         OthelloColor winnerColor;
         if (whiteAmount > blackAmount)
         {
-            winnerColor = _white;
+            winnerColor = White;
             Debug.Log("Winner is White!");
         }
         else if (whiteAmount < blackAmount)
         {   
-            winnerColor = _black;
+            winnerColor = Black;
             Debug.Log("Winner is Black!");
         }
         else
@@ -167,12 +200,11 @@ public static class ReversiModel
         await wait;
         Debug.Log("App is Over.");
 
-        // à»â∫å„Ç≈ïœçXÅBñ{óàÇÕÉäÉoÅ[ÉVèIÇÌÇ¡ÇƒÇ‡ÉAÉvÉäèIóπÇ≥ÇπÇ»Ç¢ÇÃÇ≈
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;//ÉQÅ[ÉÄÉvÉåÉCèIóπ
-#else
-    Application.Quit();//ÉQÅ[ÉÄÉvÉåÉCèIóπ
-#endif
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
 

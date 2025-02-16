@@ -19,8 +19,7 @@ public class TestFirebase : MonoBehaviour
             }
             else
             {
-                Debug.LogError(
-                  "Could not resolve all Firebase dependencies: " + _dependencyStatus);
+                Debug.LogError("Could not resolve all Firebase dependencies: " + _dependencyStatus);
             }
         });
     }

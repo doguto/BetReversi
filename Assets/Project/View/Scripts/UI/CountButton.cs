@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class CountButton : ButtonBase
+public class CountButton : ButtonViewBase
 {
     int _max;
     int _min;
-    public ReactiveProperty<int> Count { get; private set; }
+    public ReactiveProperty<int> Count { get; private set; } = new ReactiveProperty<int>(0);
 
     protected void Init(int max_ = 1, int min_ = 0)
     {

@@ -3,16 +3,18 @@ using UniRx;
 
 public class OthelloPresenter
 {
-    public readonly Vector2Int position;
-    readonly float _othelloRotateTime = 0.5f;
+    readonly float OthelloRotateTime = 0.5f;
 
+    public readonly Vector2Int Position;
+    public readonly bool ByPlayer = true;
     public ReactiveProperty<OthelloColor> color { get; private set; } = new ReactiveProperty<OthelloColor>();
 
 
-    public OthelloPresenter(Vector2Int position, OthelloColor color)
+    public OthelloPresenter(Vector2Int position, OthelloColor color, bool byPlayer = true)
     {
-        this.position = position;
+        this.Position = position;
         this.color.Value = color;
+        this.ByPlayer = byPlayer;
     }
 
     internal void ChangeColor()

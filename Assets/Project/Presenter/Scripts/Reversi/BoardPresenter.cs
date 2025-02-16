@@ -16,7 +16,6 @@ public class BoardPresenter
         _opponentInput = new Subject<Vector2Int>();
         _mouseInput.Subscribe((pos) =>
         {
-            //call model setOthello() ...etc 
             ReversiModel.SetPlayerOthello(pos);
         });
         _opponentInput.Subscribe((pos) =>
