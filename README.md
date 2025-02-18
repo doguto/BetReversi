@@ -12,6 +12,7 @@
 * unity
 * C#
 * UniRx
+* UniTask
 * DoTween
 * PUN2
 * FireBase
