@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngineInternal;
 
-internal class Board
+internal class BoardModel
 {
-    readonly Othello[,] Grid;
+    readonly OthelloModel[,] Grid;
     List<Vector2Int> _setCandidates = new List<Vector2Int>();
     internal List<Vector2Int> SettablePositions { get; private set; }
 
@@ -24,14 +22,14 @@ internal class Board
         new Vector2Int(-1, 1),
     };
 
-    internal Board()
+    internal BoardModel()
     {
-        Grid = new Othello[_sideLength, _sideLength];
+        Grid = new OthelloModel[_sideLength, _sideLength];
         for (int x = 0; x < _sideLength; x++)
         {
             for (int y = 0; y < _sideLength; y++)
             {
-                Grid[x, y] = new Othello();
+                Grid[x, y] = new OthelloModel();
             }
         }
     }

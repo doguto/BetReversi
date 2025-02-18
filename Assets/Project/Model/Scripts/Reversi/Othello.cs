@@ -1,12 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-internal class Othello
+internal class OthelloModel
 {
     internal OthelloColor Color { get; private set; } = OthelloColor.None;
-
-    internal int Amount { get; private set; }
+    internal int Amount { get; private set; } = 1;
 
     internal void Generate(OthelloColor color, int amount)
     {
@@ -20,11 +16,4 @@ internal class Othello
         if (Color == ReversiModel.None) return;
         Color = (Color == ReversiModel.White)? ReversiModel.Black : ReversiModel.White;
     }
-}
-
-public enum OthelloColor
-{
-    None,
-    white,
-    black
 }

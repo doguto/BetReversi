@@ -15,7 +15,7 @@ public static class ReversiModel
     public static readonly int MaxBetAmount = 10;
     public static readonly int DefaultOthelloAmount = 32;
 
-    private static readonly Board Board;
+    private static readonly BoardModel Board;
     private static ReversiPlayer _player;
 
     private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
@@ -35,7 +35,7 @@ public static class ReversiModel
 
     static ReversiModel()
     {
-        Board = new Board();
+        Board = new BoardModel();
     }
 
     public static void InitializeReversi(OthelloColor color, int othelloAmount, bool isSoloGame)
@@ -210,3 +210,9 @@ public static class ReversiModel
 
 
 
+public enum OthelloColor
+{
+    None,
+    white,
+    black
+}

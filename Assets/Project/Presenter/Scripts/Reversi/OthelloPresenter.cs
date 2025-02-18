@@ -3,29 +3,28 @@ using UniRx;
 
 public class OthelloPresenter
 {
-    readonly float OthelloRotateTime = 0.5f;
-
     public readonly Vector2Int Position;
+    public readonly int Amount = 1;
     public readonly bool ByPlayer = true;
-    public ReactiveProperty<OthelloColor> color { get; private set; } = new ReactiveProperty<OthelloColor>();
+    public ReactiveProperty<OthelloColor> Color { get; private set; } = new ReactiveProperty<OthelloColor>();
 
 
     public OthelloPresenter(Vector2Int position, OthelloColor color, bool byPlayer = true)
     {
-        this.Position = position;
-        this.color.Value = color;
-        this.ByPlayer = byPlayer;
+        Position = position;
+        Color.Value = color;
+        ByPlayer = byPlayer;
     }
 
     internal void ChangeColor()
     {
-        if (color.Value == OthelloColor.black)
+        if (Color.Value == OthelloColor.black)
         {
-            color.Value = OthelloColor.white;
+            Color.Value = OthelloColor.white;
         } 
         else
         {
-            color.Value = OthelloColor.black;
+            Color.Value = OthelloColor.black;
         }
     }
 }

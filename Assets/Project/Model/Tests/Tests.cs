@@ -16,7 +16,7 @@ public class Tests : MonoBehaviour
     [Test]
     public void TestGetCandidates() // => ok. 
     {
-        Board board = new Board();
+        BoardModel board = new BoardModel();
         Initialize(board);
 
         List<Vector2Int> candidates = board.GetPuttableGrid(OthelloColor.black);
@@ -37,7 +37,7 @@ public class Tests : MonoBehaviour
     [Test]
     public void TestChangeColor() // => ok.
     {
-        Board board = new Board();
+        BoardModel board = new BoardModel();
         Initialize(board);
 
         board.SetOthello(new Vector2Int(4, 2), OthelloColor.black);
@@ -56,7 +56,7 @@ public class Tests : MonoBehaviour
         Debug.Log("Test TearDown");
     }
 
-    void Initialize(Board board)
+    void Initialize(BoardModel board)
     {
         board.SetOthello(new Vector2Int(3, 3), OthelloColor.black);
         board.SetOthello(new Vector2Int(3, 4), OthelloColor.white);

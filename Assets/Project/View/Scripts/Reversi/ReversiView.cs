@@ -34,7 +34,7 @@ public class ReversiView : MonoBehaviour
     {
         Vector3 position = new Vector3(presenter.Value.Position.x, presenter.Value.Position.y, 0);
         var othello = Instantiate(_othelloPrefab, position, Quaternion.identity);
-        if (presenter.Value.color.Value == OthelloColor.white)
+        if (presenter.Value.Color.Value == OthelloColor.white)
         {
             othello.transform.localEulerAngles = WhiteAngle;
         }

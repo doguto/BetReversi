@@ -18,7 +18,7 @@ public class OthelloView : MonoBehaviour
         _canSubscribe = false;
         _presenter = presenter;
 
-        _presenter.color.Subscribe((color) =>
+        _presenter.Color.Subscribe((color) =>
         {
             if (!_canSubscribe)
             {
