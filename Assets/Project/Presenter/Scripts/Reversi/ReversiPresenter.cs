@@ -3,8 +3,10 @@ using UniRx;
 
 public class ReversiPresenter
 {
-    readonly static Vector3 UpDownButtonPositionInOthelloSet = new Vector3(0.8f, 0, 0);
-    readonly static Vector3 CheckButtonPositionInOthelloSet = new Vector3(1.7f, 0, 0);
+    readonly Vector3 UpDownButtonLeftPosition = new Vector3(-1.7f, 0, 0);
+    readonly Vector3 CheckButtonLeftPosition = new Vector3(-0.8f, 0, 0);
+    readonly Vector3 UpDownButtonRightPosition = new Vector3(0.8f, 0, 0);
+    readonly Vector3 CheckButtonRightPosition = new Vector3(1.7f, 0, 0);
 
     public ReactiveCollection<OthelloPresenter> OthelloPresenters { get; private set; } = new ReactiveCollection<OthelloPresenter>();
     // public Subject<bool> PlayersSet { get; private set; } = new Subject<bool>(); 
@@ -30,8 +32,8 @@ public class ReversiPresenter
         CheckButtonPresenter checkButtonPresenter = new CheckButtonPresenter(message.ConfirmButtonModel);
         UpDownButtonPresenter upDownButtonPresenter = new UpDownButtonPresenter(message.UpDownButtonModel);
         Vector3 position = new Vector3(message.Position.x, message.Position.y, 0);
-        ButtonBuilder.BuildNewButton(checkButtonPresenter, position + CheckButtonPositionInOthelloSet);
-        ButtonBuilder.BuildNewButton(upDownButtonPresenter, position + UpDownButtonPositionInOthelloSet);
+        ButtonBuilder.BuildNewButton(checkButtonPresenter, position + CheckButtonRightPosition, position + CheckButtonLeftPosition);
+        ButtonBuilder.BuildNewButton(upDownButtonPresenter, position + UpDownButtonRightPosition, position + UpDownButtonLeftPosition);
     }
 
     void ChangeOthelloColor(ChangeColorMessage message)

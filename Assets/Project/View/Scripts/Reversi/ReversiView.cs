@@ -5,8 +5,6 @@ using Cysharp.Threading.Tasks;
 public class ReversiView : MonoBehaviour
 {
     readonly Vector3 WhiteAngle = new Vector3(0, 180, 0);
-    readonly Vector3 UpDownButtonPosition = new Vector3(0.8f, 0, 0);
-    readonly Vector3 ConfirmButtonPosition = new Vector3(1.7f, 0, 0);
 
     [SerializeField] GameObject _othelloPrefab; // Up is black.
     [SerializeField] GameObject _upDownButton;
@@ -45,19 +43,19 @@ public class ReversiView : MonoBehaviour
 
     void SetButton(CollectionAddEvent<ButtonInfo> buttonInfo)
     {
+        Vector3 buttonPos = GameScreen.GetValidPosition(buttonInfo.Value.Position, buttonInfo.Value.SparePosition);
+        if (buttonPos == Vector3.zero) return;
+
         if (buttonInfo.Value.ButtonPresenter is CheckButtonPresenter)
         {
-            GameObject confirmObj = Instantiate(_confirmButton, buttonInfo.Value.Position, Quaternion.identity);
+            GameObject confirmObj = Instantiate(_confirmButton, buttonPos, Quaternion.identity);
             CheckButton checkButton = confirmObj.GetComponentInChildren<CheckButton>();
             checkButton.Init(buttonInfo.Value.ButtonPresenter as CheckButtonPresenter);
-            // await UniTask.WaitUntil(() => confirmButton.IsChecked);   
-            // (buttonInfo.Value.ButtonPresenter as CheckButtonPresenter).IsChecked = true;
-            // Destroy(confirmObj);
             return;
         }
         if (buttonInfo.Value.ButtonPresenter is UpDownButtonPresenter)
         {
-            GameObject upDownObj = Instantiate(_upDownButton, buttonInfo.Value.Position, Quaternion.identity);
+            GameObject upDownObj = Instantiate(_upDownButton, buttonPos, Quaternion.identity);
             UpDownButton upDownButton = upDownObj.GetComponent<UpDownButton>();
             upDownButton.Init(0, ReversiModel.MaxBetAmount, buttonInfo.Value.ButtonPresenter as UpDownButtonPresenter);
             return;
