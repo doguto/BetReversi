@@ -1,6 +1,5 @@
 using UnityEngine;
 using UniRx;
-using Cysharp.Threading.Tasks;
 
 public class ReversiView : MonoBehaviour
 {
@@ -57,7 +56,7 @@ public class ReversiView : MonoBehaviour
         {
             GameObject upDownObj = Instantiate(_upDownButton, buttonPos, Quaternion.identity);
             UpDownButton upDownButton = upDownObj.GetComponent<UpDownButton>();
-            upDownButton.Init(0, ReversiModel.MaxBetAmount, buttonInfo.Value.ButtonPresenter as UpDownButtonPresenter);
+            upDownButton.Init(buttonInfo.Value.ButtonPresenter as UpDownButtonPresenter, 1, 1, ReversiModel.MaxBetAmount);
             return;
         }
     }

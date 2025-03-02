@@ -4,13 +4,7 @@ using UnityEngine;
 internal class BoardModel
 {
     readonly OthelloModel[,] Grid;
-    List<Vector2Int> _setCandidates = new List<Vector2Int>();
-    internal List<Vector2Int> SettablePositions { get; private set; }
-
-    bool _isStarted = false;
-
-    public readonly int _sideLength = ReversiModel.Length;
-    readonly Vector2Int[] _direction =
+    readonly Vector2Int[] Direction =
     {
         new Vector2Int(0, 1), //north
         new Vector2Int(1, 1),
@@ -22,12 +16,18 @@ internal class BoardModel
         new Vector2Int(-1, 1),
     };
 
+    List<Vector2Int> _setCandidates = new List<Vector2Int>();
+    internal List<Vector2Int> SettablePositions { get; private set; }
+
+    bool _isStarted = false;
+    
+
     internal BoardModel()
     {
-        Grid = new OthelloModel[_sideLength, _sideLength];
-        for (int x = 0; x < _sideLength; x++)
+        Grid = new OthelloModel[ReversiModel.Length, ReversiModel.Length];
+        for (int x = 0; x < ReversiModel.Length; x++)
         {
-            for (int y = 0; y < _sideLength; y++)
+            for (int y = 0; y < ReversiModel.Length; y++)
             {
                 Grid[x, y] = new OthelloModel();
             }
@@ -39,9 +39,9 @@ internal class BoardModel
         _isStarted = true;
     }
 
-    internal void SetOthello(Vector2Int position, OthelloColor color)
+    internal void SetOthello(Vector2Int position, OthelloColor color, int betAmount = 1)
     {
-        Grid[position.x, position.y].Generate(color, 1); // later , need to make codes for othello amount.
+        Grid[position.x, position.y].Generate(color, betAmount); // later , need to make codes for othello amount.
         _setCandidates.Remove(position);
         UpdateSetCandidate(position);
     }
@@ -68,13 +68,13 @@ internal class BoardModel
         // Maybe, this is Not good algorithm.
         foreach (Vector2Int candidate in _setCandidates)
         {
-            for (int i = 0; i < _direction.Length; i++)
+            for (int i = 0; i < Direction.Length; i++)
             {
                 Vector2Int pos = candidate;
                 bool canOut = false;
-                for (int j = 1; j < _sideLength; j++)
+                for (int j = 1; j < ReversiModel.Length; j++)
                 {   
-                    pos += _direction[i];
+                    pos += Direction[i];
                     if (!HasOthello(pos)) break;
 
                     bool isSame = Grid[pos.x, pos.y].Color == turnColor;
@@ -104,12 +104,12 @@ internal class BoardModel
 
         if (!IsInGrid(putPosition)) return changeGrids;
 
-        for (int i = 0; i < _direction.Length; i++)
+        for (int i = 0; i < Direction.Length; i++)
         {
             Vector2Int pos = putPosition;
             for (int j = 1; j < 8; j++)
             {
-                pos += _direction[i];
+                pos += Direction[i];
                 if (!IsInGrid(pos)) break;
                 if (!HasOthello(pos)) break;
 
@@ -125,7 +125,7 @@ internal class BoardModel
                 int lim = j;
                 for (int k = 1; k < lim; k++)
                 {
-                    Vector2Int change = putPosition + k * _direction[i];
+                    Vector2Int change = putPosition + k * Direction[i];
                     changeGrids.Add(change);
                 }
                 break;
@@ -138,9 +138,9 @@ internal class BoardModel
     internal int GetOthelloAmount(OthelloColor color)
     {
         int amount = 0;
-        for (int y = 0; y < _sideLength; y++)
+        for (int y = 0; y < ReversiModel.Length; y++)
         {
-            for (int x = 0; x < _sideLength; x++)
+            for (int x = 0; x < ReversiModel.Length; x++)
             {
                 OthelloColor gridColor = Grid[x, y].Color;
                 if (gridColor != color) continue;
@@ -173,8 +173,8 @@ internal class BoardModel
 
     bool IsInGrid(Vector2Int position)
     {
-        bool isInX = 0 <= position.x && position.x < _sideLength;
-        bool isInY = 0 <= position.y && position.y < _sideLength;
+        bool isInX = 0 <= position.x && position.x < ReversiModel.Length;
+        bool isInY = 0 <= position.y && position.y < ReversiModel.Length;
 
         return isInX && isInY;
     }

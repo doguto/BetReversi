@@ -43,10 +43,10 @@ public static class ReversiModel
         _player = new ReversiPlayer(color, othelloAmount);
         _isSoloGame = isSoloGame;
 
-        SetOthello(new Vector2Int(3, 3), Black, false);
-        SetOthello(new Vector2Int(3, 4), White, false);
-        SetOthello(new Vector2Int(4, 3), White, false);
-        SetOthello(new Vector2Int(4, 4), Black, false);
+        SetOthello(new Vector2Int(3, 3), Black, 1, false);
+        SetOthello(new Vector2Int(3, 4), White, 1, false);
+        SetOthello(new Vector2Int(4, 3), White, 1, false);
+        SetOthello(new Vector2Int(4, 4), Black, 1, false);
 
         Board.Initialize();
         _currentTurn = FirstTurn;
@@ -62,15 +62,12 @@ public static class ReversiModel
         if (Board.HasOthello(position)) return;
         if (_isStarted && !_puttableGrids.Contains(position)) return;
 
-
-        /// 以下理想の処理
         UpDownButtonModel upDownButton = new UpDownButtonModel();
         CheckButtonModel confirmationButton = new CheckButtonModel();
         var message = new SetOthelloMessage(position, _currentTurn, confirmationButton, upDownButton);
-        Board.SetOthello(position, _currentTurn);
         _setOthelloMessage.OnNext(message);
         await UniTask.WaitUntil(() => confirmationButton.isChecked);  // confirmButtonの入力をUniRxを介して受け取る。
-        int betAmount = upDownButton.Value;
+        Board.SetOthello(position, _currentTurn, upDownButton.Value);
         upDownButton = null;
         confirmationButton = null;
 
@@ -83,34 +80,27 @@ public static class ReversiModel
             ChangeOthelloColor(pos);
         }
         ChangeTurn();
-    
     }
 
-    public static void SetOpponentOthello(Vector2Int position)
+    public static void SetOpponentOthello(Vector2Int position, int betAmount = 1)
     {
         if (_currentTurn == _player.PlayerColor) return;
-        SetOthello(position, _currentTurn, false);
+        SetOthello(position, _currentTurn, betAmount);
     }
 
-    internal static void SetOthello(Vector2Int position, bool byPlayer = false)
+    internal static void SetOthello(Vector2Int position, int betAmount = 1, bool byPlayer = false)
     {
-        SetOthello(position, _currentTurn, byPlayer);
+        SetOthello(position, _currentTurn, betAmount, byPlayer);
     }
 
-    async internal static void SetOthello(Vector2Int position, OthelloColor color, bool byPlayer = false)
+    internal static void SetOthello(Vector2Int position, OthelloColor color, int betAmount = 1, bool byPlayer = false)
     {
         if (Board.HasOthello(position)) return;
         if (_isStarted && !_puttableGrids.Contains(position)) return;
 
         var message = new SetOthelloMessage(position, color, byPlayer);
-        Board.SetOthello(position, color);
+        Board.SetOthello(position, color, betAmount);
         _setOthelloMessage.OnNext(message);
-
-        if (byPlayer)
-        {
-
-            await UniTask.WaitUntil(() => true);  // confirmButtonの入力をUniRxを介して受け取る。
-        }
 
         List<Vector2Int> changeOthellos = new List<Vector2Int>();
         changeOthellos = Board.GetChangeOthello(position, color);
