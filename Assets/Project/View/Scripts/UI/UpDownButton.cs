@@ -1,6 +1,6 @@
 using UnityEngine;
 using UniRx;
-using UnityEngine.UI;
+using TMPro;
 
 public class UpDownButton : MonoBehaviour
 {
@@ -8,7 +8,8 @@ public class UpDownButton : MonoBehaviour
     [SerializeField] CountButton _downButton;
 
     UpDownButtonPresenter _presenter;
-    [SerializeField] Text _text;
+    // [SerializeField] Text _text;
+    [SerializeField] TextMeshProUGUI _text;
     
     int _max;
     int _min;
@@ -22,7 +23,9 @@ public class UpDownButton : MonoBehaviour
         set
         {
             _value = value;
+            Mathf.Clamp(_value, _min, _max);
             _presenter.Value = value;
+            ShowValue();
         }
     }
 
@@ -32,8 +35,9 @@ public class UpDownButton : MonoBehaviour
         Value = value;
         _max = max;
         _min = min;
+        ShowValue();
 
-        _presenter.Destroyer.Subscribe(_ => Delete());
+        _presenter.Destroyer.Subscribe(_ => Destroy());
         _upButton.Count.Subscribe(_ => Value++);
         _downButton.Count.Subscribe(_ => Value--);
     }
@@ -43,13 +47,12 @@ public class UpDownButton : MonoBehaviour
         _text.text = _value.ToString();
     }
     
-    internal int GetValue()
-    {
-        // _value += _upButton.Count.Value - _downButton.Count.Value;
-        return Mathf.Clamp(_value, _min, _max);
-    }
+    // internal int GetValue()
+    // {
+    //     return Mathf.Clamp(_value, _min, _max);
+    // }
 
-    public void Delete()
+    public void Destroy()
     {
         Destroy(this.gameObject);
     } 

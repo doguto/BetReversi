@@ -24,22 +24,20 @@ public class UpDownButtonModel : ButtonModelBase
     Subject<bool> _destroyer = new Subject<bool>();
     public IObservable<bool> Destroyer => _destroyer;
 
-    int _value = 0;
-    public int Value 
-    { 
-        get
-        {
-            _destroyer.OnNext(true);
-            return _value;
-        } 
-        set
-        {
-            _value = value;
-        } 
-    }
+    public int Value { get; set; }
 
     internal UpDownButtonModel()
     {
-        _value = 0;
+        Value = 0;
+    }
+
+    internal void Destroy()
+    {
+        _destroyer.OnNext(true);
+    }
+
+    ~UpDownButtonModel()
+    {
+        _destroyer.OnNext(true);
     }
 }
