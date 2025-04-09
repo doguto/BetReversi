@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangeColorMessage
+namespace Project.Reversi.Model
 {
-    public Vector2Int Position {  get; private set; }
-    public ChangeColorMessage(Vector2Int position)
+    public class ChangeColorMessage
     {
-        Position = position;
+        public Vector2Int Position {  get; private set; }
+        public ChangeColorMessage(Vector2Int position)
+        {
+            Position = position;
+        }
     }
 }

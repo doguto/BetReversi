@@ -1,181 +1,184 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-internal class BoardModel
+namespace Project.Reversi.Model
 {
-    readonly OthelloModel[,] Grid;
-    readonly Vector2Int[] Direction =
+    internal class BoardModel
     {
-        new Vector2Int(0, 1), //north
-        new Vector2Int(1, 1),
-        new Vector2Int(1, 0), //east
-        new Vector2Int(1, -1),
-        new Vector2Int(0, -1), //south
-        new Vector2Int(-1, -1),
-        new Vector2Int(-1, 0), //west
-        new Vector2Int(-1, 1),
-    };
-
-    List<Vector2Int> _setCandidates = new List<Vector2Int>();
-    internal List<Vector2Int> SettablePositions { get; private set; }
-
-    bool _isStarted = false;
-    
-
-    internal BoardModel()
-    {
-        Grid = new OthelloModel[ReversiModel.Length, ReversiModel.Length];
-        for (int x = 0; x < ReversiModel.Length; x++)
+        readonly OthelloModel[,] Grid;
+        readonly Vector2Int[] Direction =
         {
-            for (int y = 0; y < ReversiModel.Length; y++)
+            new Vector2Int(0, 1), //north
+            new Vector2Int(1, 1),
+            new Vector2Int(1, 0), //east
+            new Vector2Int(1, -1),
+            new Vector2Int(0, -1), //south
+            new Vector2Int(-1, -1),
+            new Vector2Int(-1, 0), //west
+            new Vector2Int(-1, 1),
+        };
+
+        List<Vector2Int> _setCandidates = new List<Vector2Int>();
+        internal List<Vector2Int> SettablePositions { get; private set; }
+
+        bool _isStarted = false;
+        
+
+        internal BoardModel()
+        {
+            Grid = new OthelloModel[ReversiModel.Length, ReversiModel.Length];
+            for (int x = 0; x < ReversiModel.Length; x++)
             {
-                Grid[x, y] = new OthelloModel();
+                for (int y = 0; y < ReversiModel.Length; y++)
+                {
+                    Grid[x, y] = new OthelloModel();
+                }
             }
         }
-    }
 
-    internal void Initialize()
-    {
-        _isStarted = true;
-    }
-
-    internal void SetOthello(Vector2Int position, OthelloColor color, int betAmount = 1)
-    {
-        Grid[position.x, position.y].Generate(color, betAmount); // later , need to make codes for othello amount.
-        _setCandidates.Remove(position);
-        UpdateSetCandidate(position);
-    }
-
-    internal void ChangeColor(Vector2Int position)
-    {
-        Grid[position.x, position.y].ChangeColor();
-    }
-
-    internal bool HasOthello(Vector2Int position)
-    {
-        if (!IsInGrid(position)) return false;
-        if (Grid[position.x, position.y].Color == OthelloColor.None) return false;
-        return true;
-    }
-
-    internal List<Vector2Int> GetPuttableGrid(OthelloColor turnColor)
-    {
-        List<Vector2Int> puttablePositions = new List<Vector2Int>();
-
-        if (_setCandidates.Count == 0)
-            return puttablePositions;
-
-        // Maybe, this is Not good algorithm.
-        foreach (Vector2Int candidate in _setCandidates)
+        internal void Initialize()
         {
+            _isStarted = true;
+        }
+
+        internal void SetOthello(Vector2Int position, OthelloColor color, int betAmount = 1)
+        {
+            Grid[position.x, position.y].Generate(color, betAmount); // later , need to make codes for othello amount.
+            _setCandidates.Remove(position);
+            UpdateSetCandidate(position);
+        }
+
+        internal void ChangeColor(Vector2Int position)
+        {
+            Grid[position.x, position.y].ChangeColor();
+        }
+
+        internal bool HasOthello(Vector2Int position)
+        {
+            if (!IsInGrid(position)) return false;
+            if (Grid[position.x, position.y].Color == OthelloColor.None) return false;
+            return true;
+        }
+
+        internal List<Vector2Int> GetPuttableGrid(OthelloColor turnColor)
+        {
+            List<Vector2Int> puttablePositions = new List<Vector2Int>();
+
+            if (_setCandidates.Count == 0)
+                return puttablePositions;
+
+            // Maybe, this is Not good algorithm.
+            foreach (Vector2Int candidate in _setCandidates)
+            {
+                for (int i = 0; i < Direction.Length; i++)
+                {
+                    Vector2Int pos = candidate;
+                    bool canOut = false;
+                    for (int j = 1; j < ReversiModel.Length; j++)
+                    {   
+                        pos += Direction[i];
+                        if (!HasOthello(pos)) break;
+
+                        bool isSame = Grid[pos.x, pos.y].Color == turnColor;
+                        if(j == 1)
+                        {
+                            if (isSame) break;
+                            continue;
+                        }
+
+                        if (!isSame) continue;
+
+                        puttablePositions.Add(candidate);
+                        canOut = true;
+                        break;
+                    }
+
+                    if (canOut) break;
+                }
+            }
+
+            return puttablePositions; // Completed
+        }
+
+        internal List<Vector2Int> GetChangeOthello(Vector2Int putPosition, OthelloColor putColor)
+        {
+            List<Vector2Int> changeGrids = new List<Vector2Int>();
+
+            if (!IsInGrid(putPosition)) return changeGrids;
+
             for (int i = 0; i < Direction.Length; i++)
             {
-                Vector2Int pos = candidate;
-                bool canOut = false;
-                for (int j = 1; j < ReversiModel.Length; j++)
-                {   
+                Vector2Int pos = putPosition;
+                for (int j = 1; j < 8; j++)
+                {
                     pos += Direction[i];
+                    if (!IsInGrid(pos)) break;
                     if (!HasOthello(pos)) break;
 
-                    bool isSame = Grid[pos.x, pos.y].Color == turnColor;
-                    if(j == 1)
+                    bool isSame = Grid[pos.x, pos.y].Color == putColor;
+                    if (j == 1)
                     {
                         if (isSame) break;
                         continue;
                     }
-
                     if (!isSame) continue;
 
-                    puttablePositions.Add(candidate);
-                    canOut = true;
+                    // sameColor othello merges in first time.
+                    int lim = j;
+                    for (int k = 1; k < lim; k++)
+                    {
+                        Vector2Int change = putPosition + k * Direction[i];
+                        changeGrids.Add(change);
+                    }
                     break;
                 }
-
-                if (canOut) break;
             }
+
+            return changeGrids;
         }
 
-        return puttablePositions; // Completed
-    }
-
-    internal List<Vector2Int> GetChangeOthello(Vector2Int putPosition, OthelloColor putColor)
-    {
-        List<Vector2Int> changeGrids = new List<Vector2Int>();
-
-        if (!IsInGrid(putPosition)) return changeGrids;
-
-        for (int i = 0; i < Direction.Length; i++)
+        internal int GetOthelloAmount(OthelloColor color)
         {
-            Vector2Int pos = putPosition;
-            for (int j = 1; j < 8; j++)
+            int amount = 0;
+            for (int y = 0; y < ReversiModel.Length; y++)
             {
-                pos += Direction[i];
-                if (!IsInGrid(pos)) break;
-                if (!HasOthello(pos)) break;
-
-                bool isSame = Grid[pos.x, pos.y].Color == putColor;
-                if (j == 1)
+                for (int x = 0; x < ReversiModel.Length; x++)
                 {
-                    if (isSame) break;
-                    continue;
-                }
-                if (!isSame) continue;
+                    OthelloColor gridColor = Grid[x, y].Color;
+                    if (gridColor != color) continue;
 
-                // sameColor othello merges in first time.
-                int lim = j;
-                for (int k = 1; k < lim; k++)
+                    amount += Grid[x, y].Amount;
+                }
+            }
+
+            return amount;
+        }
+
+        void UpdateSetCandidate(Vector2Int position)
+        {
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++) // 9 times loop
                 {
-                    Vector2Int change = putPosition + k * Direction[i];
-                    changeGrids.Add(change);
+                    if (i == 0 && j == 0) continue;
+
+                    Vector2Int researchPosition = new Vector2Int(position.x + i, position.y + j);
+                    if (!IsInGrid(researchPosition)) continue;
+                    if (HasOthello(researchPosition)) continue;
+
+                    if (_setCandidates.Contains(researchPosition)) continue;
+
+                    _setCandidates.Add(researchPosition);
                 }
-                break;
             }
         }
 
-        return changeGrids;
-    }
-
-    internal int GetOthelloAmount(OthelloColor color)
-    {
-        int amount = 0;
-        for (int y = 0; y < ReversiModel.Length; y++)
+        bool IsInGrid(Vector2Int position)
         {
-            for (int x = 0; x < ReversiModel.Length; x++)
-            {
-                OthelloColor gridColor = Grid[x, y].Color;
-                if (gridColor != color) continue;
+            bool isInX = 0 <= position.x && position.x < ReversiModel.Length;
+            bool isInY = 0 <= position.y && position.y < ReversiModel.Length;
 
-                amount += Grid[x, y].Amount;
-            }
+            return isInX && isInY;
         }
-
-        return amount;
-    }
-
-    void UpdateSetCandidate(Vector2Int position)
-    {
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++) // 9 times loop
-            {
-                if (i == 0 && j == 0) continue;
-
-                Vector2Int researchPosition = new Vector2Int(position.x + i, position.y + j);
-                if (!IsInGrid(researchPosition)) continue;
-                if (HasOthello(researchPosition)) continue;
-
-                if (_setCandidates.Contains(researchPosition)) continue;
-
-                _setCandidates.Add(researchPosition);
-            }
-        }
-    }
-
-    bool IsInGrid(Vector2Int position)
-    {
-        bool isInX = 0 <= position.x && position.x < ReversiModel.Length;
-        bool isInY = 0 <= position.y && position.y < ReversiModel.Length;
-
-        return isInX && isInY;
     }
 }

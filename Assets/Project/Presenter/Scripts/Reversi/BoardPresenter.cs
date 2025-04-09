@@ -1,27 +1,31 @@
 using System;
 using UnityEngine;
 using UniRx;
+using Project.Reversi.Model;
 
-public class BoardPresenter
+namespace Project.Reversi.Presenter
 {
-    private Subject<Vector2Int> _mouseInput;
-    private Subject<Vector2Int> _opponentInput;
-    public IObserver<Vector2Int> MouseInput => _mouseInput;
-    public IObserver<Vector2Int> OpponentInput => _opponentInput;
-
-
-    public BoardPresenter()
+    public class BoardPresenter
     {
-        _mouseInput = new Subject<Vector2Int>();
-        _opponentInput = new Subject<Vector2Int>();
-        _mouseInput.Subscribe((pos) =>
+        private Subject<Vector2Int> _mouseInput;
+        private Subject<Vector2Int> _opponentInput;
+        public IObserver<Vector2Int> MouseInput => _mouseInput;
+        public IObserver<Vector2Int> OpponentInput => _opponentInput;
+
+
+        public BoardPresenter()
         {
-            ReversiModel.SetPlayerOthello(pos);
-        });
-        _opponentInput.Subscribe((pos) =>
-        {
-            Vector2Int transedPos = new Vector2Int(8 - pos.x, 8 - pos.y);
-            ReversiModel.SetOpponentOthello(transedPos);
-        });
+            _mouseInput = new Subject<Vector2Int>();
+            _opponentInput = new Subject<Vector2Int>();
+            _mouseInput.Subscribe((pos) =>
+            {
+                ReversiModel.SetPlayerOthello(pos);
+            });
+            _opponentInput.Subscribe((pos) =>
+            {
+                Vector2Int transedPos = new Vector2Int(8 - pos.x, 8 - pos.y);
+                ReversiModel.SetOpponentOthello(transedPos);
+            });
+        }
     }
 }

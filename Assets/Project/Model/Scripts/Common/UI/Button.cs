@@ -1,43 +1,46 @@
 using UniRx;
 using System;
 
-public class ButtonModelBase  // 要修正。Genericの必要無し
+namespace Project.Common.Model
 {
-    // Subject<T> subject = new Subject<T>();
-    // public IObservable<T> Subject => subject;
-}
-
-
-public class CheckButtonModel : ButtonModelBase
-{
-    public bool isChecked = false;
-
-    internal CheckButtonModel()
+    public class ButtonModelBase  // 要修正。Genericの必要無し
     {
-        isChecked = false; 
-    }
-}
-
-
-public class UpDownButtonModel : ButtonModelBase
-{
-    Subject<bool> _destroyer = new Subject<bool>();
-    public IObservable<bool> Destroyer => _destroyer;
-
-    public int Value { get; set; }
-
-    internal UpDownButtonModel()
-    {
-        Value = 0;
+        // Subject<T> subject = new Subject<T>();
+        // public IObservable<T> Subject => subject;
     }
 
-    internal void Destroy()
+
+    public class CheckButtonModel : ButtonModelBase
     {
-        _destroyer.OnNext(true);
+        public bool isChecked = false;
+
+        internal CheckButtonModel()
+        {
+            isChecked = false; 
+        }
     }
 
-    ~UpDownButtonModel()
+
+    public class UpDownButtonModel : ButtonModelBase
     {
-        _destroyer.OnNext(true);
+        Subject<bool> _destroyer = new Subject<bool>();
+        public IObservable<bool> Destroyer => _destroyer;
+
+        public int Value { get; set; }
+
+        internal UpDownButtonModel()
+        {
+            Value = 0;
+        }
+
+        internal void Destroy()
+        {
+            _destroyer.OnNext(true);
+        }
+
+        ~UpDownButtonModel()
+        {
+            _destroyer.OnNext(true);
+        }
     }
 }

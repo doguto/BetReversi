@@ -1,9 +1,12 @@
 using System.Threading.Tasks;
 
-internal static class Interval
+namespace Project.Common.Model
 {
-    internal static async Task Deray(int derayTime)
+    internal static class Interval
     {
-        await Task.Delay(1000);
+        internal static async Task Deray(int derayTime)
+        {
+            await Task.Delay(1000);
+        }
     }
 }

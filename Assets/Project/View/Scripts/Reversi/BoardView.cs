@@ -1,23 +1,28 @@
 using UnityEngine;
 using UniRx;
+using Project.Reversi.Model;
+using Project.Reversi.Presenter;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent (typeof(Collider2D))]
-public class BoardView : MonoBehaviour 
+namespace Project.Reversi.View
 {
-    BoardPresenter _presenter;
-
-    internal void InitializeBoard()
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent (typeof(Collider2D))]
+    public class BoardView : MonoBehaviour 
     {
-        _presenter = new BoardPresenter();
-    }
+        BoardPresenter _presenter;
 
-    private void OnMouseDown()
-    {
-        if (_presenter == null) return;
+        internal void InitializeBoard()
+        {
+            _presenter = new BoardPresenter();
+        }
 
-        Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2Int grid = new Vector2Int((int)Mathf.Round(position.x), (int)Mathf.Round(position.y));
-        _presenter.MouseInput.OnNext(grid);
+        private void OnMouseDown()
+        {
+            if (_presenter == null) return;
+
+            Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2Int grid = new Vector2Int((int)Mathf.Round(position.x), (int)Mathf.Round(position.y));
+            _presenter.MouseInput.OnNext(grid);
+        }
     }
 }
