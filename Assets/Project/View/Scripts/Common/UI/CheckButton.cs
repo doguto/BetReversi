@@ -7,8 +7,8 @@ namespace Project.Common.View
     public class CheckButton : ButtonViewBase
     {
         // public ReactiveProperty<bool> IsClicked { get; protected set; } = new ReactiveProperty<bool>(false);
-        private CheckButtonPresenter _presenter;
-        bool _isChecked = false;
+        CheckButtonPresenter _presenter;
+        bool _isChecked;
         public bool IsChecked
         { 
             get
