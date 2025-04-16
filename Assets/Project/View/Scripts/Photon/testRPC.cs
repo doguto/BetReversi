@@ -12,7 +12,7 @@ public class testRPC : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButton(0))
         {
             photonView.RPC(nameof(WriteDebug), RpcTarget.All, pos);
