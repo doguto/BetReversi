@@ -1,28 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Project.Common.Model;
 
-public class SetOthelloMessage
+namespace Project.Reversi.Model
 {
-    public Vector2Int Position { get; private set; }
-    public OthelloColor Color { get; private set; }
-    public bool Byplayer { get; private set; }
-    public CheckButtonModel ConfirmButtonModel { get; private set; }
-    public UpDownButtonModel UpDownButtonModel { get; private set; }
-
-    internal SetOthelloMessage(Vector2Int position, OthelloColor color, bool byPlayer = false)
+    public class SetOthelloMessage
     {
-        Position = position;
-        Color = color;
-        Byplayer = byPlayer;
-    }
+        public Vector2Int Position { get; private set; }
+        public OthelloColor Color { get; private set; }
+        public bool ByPlayer { get; private set; }
+        public CheckButtonModel ConfirmButtonModel { get; private set; }
+        public UpDownButtonModel UpDownButtonModel { get; private set; }
 
-    internal SetOthelloMessage(Vector2Int position, OthelloColor color, CheckButtonModel confirmButtonModel, UpDownButtonModel upDownButtonModel)
-    {
-        Position = position;
-        Color = color;
-        Byplayer = true;
-        ConfirmButtonModel = confirmButtonModel;
-        UpDownButtonModel = upDownButtonModel;
+        internal SetOthelloMessage(Vector2Int position, OthelloColor color, bool byPlayer = false)
+        {
+            Position = position;
+            Color = color;
+            ByPlayer = byPlayer;
+        }
+
+        internal SetOthelloMessage(Vector2Int position, OthelloColor color, CheckButtonModel confirmButtonModel, UpDownButtonModel upDownButtonModel)
+        {
+            Position = position;
+            Color = color;
+            ByPlayer = true;
+            ConfirmButtonModel = confirmButtonModel;
+            UpDownButtonModel = upDownButtonModel;
+        }
     }
 }

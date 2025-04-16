@@ -1,33 +1,37 @@
 using UnityEngine;
 using UniRx;
+using Project.Common.Model;
 
-public class UIBuilder
+namespace Project.Common.Presenter
 {
-
-}
-
-
-public class ButtonBuilder
-{
-    public ReactiveCollection<ButtonInfo> _buttonPresenters = new ReactiveCollection<ButtonInfo>();
-
-    internal void BuildNewButton(ButtonPresenterBase button, Vector3 position, Vector3 sparePosition = default)
+    public class UIBuilder
     {
-        ButtonInfo buttonInfo = new ButtonInfo(button, position, sparePosition);
-        _buttonPresenters.Add(buttonInfo);
+        
     }
-}
 
-public class ButtonInfo
-{
-    public ButtonPresenterBase ButtonPresenter { get; internal set; }
-    public Vector3 Position { get; internal set; }
-    public Vector3 SparePosition { get; internal set; }
 
-    internal ButtonInfo(ButtonPresenterBase buttonPresenter, Vector3 position, Vector3 sparePosition = default)
+    public class ButtonBuilder
     {
-        ButtonPresenter = buttonPresenter;
-        Position = position;
-        SparePosition = sparePosition;
+        public ReactiveCollection<ButtonInfo> _buttonPresenters = new();
+
+        internal void BuildNewButton(ButtonPresenterBase button, Vector3 position, Vector3 sparePosition = default)
+        {
+            var buttonInfo = new ButtonInfo(button, position, sparePosition);
+            _buttonPresenters.Add(buttonInfo);
+        }
+    }
+
+    public class ButtonInfo
+    {
+        public ButtonPresenterBase ButtonPresenter { get; internal set; }
+        public Vector3 Position { get; internal set; }
+        public Vector3 SparePosition { get; internal set; }
+
+        internal ButtonInfo(ButtonPresenterBase buttonPresenter, Vector3 position, Vector3 sparePosition = default)
+        {
+            ButtonPresenter = buttonPresenter;
+            Position = position;
+            SparePosition = sparePosition;
+        }
     }
 }

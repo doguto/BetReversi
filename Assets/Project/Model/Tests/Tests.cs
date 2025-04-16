@@ -2,65 +2,85 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using NUnit.Framework;
-using System;
-using UnityEngine.UIElements;
+using Project.Reversi.Model;
 
-public class Tests : MonoBehaviour
+namespace Project.Test
 {
-    [SetUp] 
-    public void SetUp()
+    public class Tests : MonoBehaviour
     {
-        Debug.Log("Test SetUp");
-    }
-
-    [Test]
-    public void TestGetCandidates() // => ok. 
-    {
-        Board board = new Board();
-        Initialize(board);
-
-        List<Vector2Int> candidates = board.GetPuttableGrid(OthelloColor.black);
-
-        if (candidates.Count == 0)
+        [SetUp] 
+        public void SetUp()
         {
-            Debug.Log("No Puttable position");
-            return;
+            Debug.Log("Test SetUp");
+            ReversiModel.InitializeReversi(OthelloColor.black, 32, true);
         }
 
-        Debug.Log("candidates are");
-        foreach (var candidate in candidates) 
+        [Test]
+        public void TestGetCandidates() // => ok. 
         {
-            Debug.Log(candidate);
+            BoardModel board = new BoardModel();
+            Initialize(board);
+
+            List<Vector2Int> candidates = board.GetPuttableGrid(OthelloColor.black);
+
+            if (candidates.Count == 0)
+            {
+                Debug.Log("No Puttable position");
+                return;
+            }
+
+            Debug.Log("candidates are");
+            foreach (var candidate in candidates) 
+            {
+                Debug.Log(candidate);
+            }
         }
-    }
 
-    [Test]
-    public void TestChangeColor() // => ok.
-    {
-        Board board = new Board();
-        Initialize(board);
-
-        board.SetOthello(new Vector2Int(4, 2), OthelloColor.black);
-
-        List<Vector2Int> changeOhtellos = new List<Vector2Int>();
-        changeOhtellos = board.GetChangeOthello(new Vector2Int(4, 2), OthelloColor.black);
-        foreach (Vector2Int pos in changeOhtellos)
+        [Test]
+        public void TestChangeColor() // => ok.
         {
-            Debug.Log(pos);
+            BoardModel board = new BoardModel();
+            Initialize(board);
+
+            board.SetOthello(new Vector2Int(4, 2), OthelloColor.black);
+
+            List<Vector2Int> changeOhtellos = new List<Vector2Int>();
+            changeOhtellos = board.GetChangeOthello(new Vector2Int(4, 2), OthelloColor.black);
+            foreach (Vector2Int pos in changeOhtellos)
+            {
+                Debug.Log(pos);
+            }
         }
-    }
 
-    [TearDown]
-    public void TearDown()
-    {
-        Debug.Log("Test TearDown");
-    }
+        [Test]
+        public void TestShowResult() 
+        {
+            List<Vector2Int> positions = new List<Vector2Int>();
+            positions.Add(new Vector2Int(3, 5));
+            positions.Add(new Vector2Int(2, 3));
 
-    void Initialize(Board board)
-    {
-        board.SetOthello(new Vector2Int(3, 3), OthelloColor.black);
-        board.SetOthello(new Vector2Int(3, 4), OthelloColor.white);
-        board.SetOthello(new Vector2Int(4, 3), OthelloColor.white);
-        board.SetOthello(new Vector2Int(4, 4), OthelloColor.black);
+            int i = 1;
+            foreach (var pos in positions)
+            {
+                ReversiModel.SetOthello(pos, 2 * i);
+                i++;
+            }
+
+            // ReversiModel.ShowResult();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            Debug.Log("Test TearDown");
+        }
+
+        void Initialize(BoardModel board)
+        {
+            board.SetOthello(new Vector2Int(3, 3), OthelloColor.black);
+            board.SetOthello(new Vector2Int(3, 4), OthelloColor.white);
+            board.SetOthello(new Vector2Int(4, 3), OthelloColor.white);
+            board.SetOthello(new Vector2Int(4, 4), OthelloColor.black);
+        }
     }
 }

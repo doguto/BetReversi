@@ -1,31 +1,34 @@
 using UnityEngine;
 using UniRx;
+using Project.Reversi.Model;
 
-public class OthelloPresenter
+namespace Project.Reversi.Presenter
 {
-    readonly float OthelloRotateTime = 0.5f;
-
-    public readonly Vector2Int Position;
-    public readonly bool ByPlayer = true;
-    public ReactiveProperty<OthelloColor> color { get; private set; } = new ReactiveProperty<OthelloColor>();
-
-
-    public OthelloPresenter(Vector2Int position, OthelloColor color, bool byPlayer = true)
+    public class OthelloPresenter
     {
-        this.Position = position;
-        this.color.Value = color;
-        this.ByPlayer = byPlayer;
-    }
+        public readonly Vector2Int Position;
+        public readonly int Amount = 1;
+        public readonly bool ByPlayer;
+        public ReactiveProperty<OthelloColor> Color { get; private set; } = new();
 
-    internal void ChangeColor()
-    {
-        if (color.Value == OthelloColor.black)
+
+        public OthelloPresenter(Vector2Int position, OthelloColor color, bool byPlayer = true)
         {
-            color.Value = OthelloColor.white;
-        } 
-        else
+            Position = position;
+            Color.Value = color;
+            ByPlayer = byPlayer;
+        }
+
+        internal void ChangeColor()
         {
-            color.Value = OthelloColor.black;
+            if (Color.Value == OthelloColor.black)
+            {
+                Color.Value = OthelloColor.white;
+            }
+            else
+            {
+                Color.Value = OthelloColor.black;
+            }
         }
     }
 }

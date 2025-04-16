@@ -6,13 +6,13 @@ public class MousePort : MonoBehaviour
     float _firstZ;
     bool _isClicking = false;
 
-    private void Awake()
+    void Awake()
     {
         _transform = transform;
         _firstZ = transform.position.z;
     }
 
-    private void Update()
+    void Update()
     {
         OnLeftClicked();
     }
@@ -27,7 +27,7 @@ public class MousePort : MonoBehaviour
         _isClicking = true;
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
         if (!_isClicking) return;
 

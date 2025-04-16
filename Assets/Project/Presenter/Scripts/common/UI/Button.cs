@@ -1,60 +1,63 @@
 using UniRx;
 using System;
+using Project.Common.Model;
 
-
-public class ButtonPresenterBase
+namespace Project.Common.Presenter
 {
-    // protected ButtonModelBase model;
-}
-
-
-public class CheckButtonPresenter : ButtonPresenterBase
-{
-    CheckButtonModel _model;
-    bool _isChecked = false;
-    public bool IsChecked
-    { 
-        get
-        {
-            return _isChecked;
-        }
-        set
-        {
-            _isChecked = value;
-            _model.isChecked = value;
-        } 
-    }
-
-    internal CheckButtonPresenter(CheckButtonModel model)
+    public class ButtonPresenterBase
     {
-        _model = model;
+        // protected ButtonModelBase model;
     }
-}
 
 
-public class UpDownButtonPresenter : ButtonPresenterBase
-{
-    Subject<bool> _destroyer = new Subject<bool>();
-    public IObservable<bool> Destroyer => _destroyer;
+    public class CheckButtonPresenter : ButtonPresenterBase
+    {
+        CheckButtonModel _model;
+        bool _isChecked = false;
+        public bool IsChecked
+        { 
+            get
+            {
+                return _isChecked;
+            }
+            set
+            {
+                _isChecked = value;
+                _model.isChecked = value;
+            } 
+        }
 
-    UpDownButtonModel _model;
-    int _value = 0;
-    public int Value 
-    { 
-        get 
+        internal CheckButtonPresenter(CheckButtonModel model)
         {
-            return _value;
-        } 
-        set 
-        {
-            _value = value;
-            _model.Value = value;
+            _model = model;
         }
     }
 
-    internal UpDownButtonPresenter(UpDownButtonModel model)
+
+    public class UpDownButtonPresenter : ButtonPresenterBase
     {
-        _model = model;
-        model.Destroyer.Subscribe(_ => _destroyer.OnNext(true));
+        Subject<bool> _destroyer = new();
+        public IObservable<bool> Destroyer => _destroyer;
+
+        UpDownButtonModel _model;
+        int _value = 0;
+        public int Value 
+        { 
+            get 
+            {
+                return _value;
+            } 
+            set 
+            {
+                _value = value;
+                _model.Value = value;
+            }
+        }
+
+        internal UpDownButtonPresenter(UpDownButtonModel model)
+        {
+            _model = model;
+            model.Destroyer.Subscribe(_ => _destroyer.OnNext(true));
+        }
     }
 }

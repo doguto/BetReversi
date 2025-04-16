@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 
-internal static class Interval
+namespace Project.Common.Model
 {
-    internal static async Task Deray(int derayTime)
+    internal static class Interval
     {
-        await Task.Delay(1000);
+        internal static async Task Delay(int derayTime)
+        {
+            await Task.Delay(1000);
+        }
     }
 }
