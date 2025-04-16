@@ -7,8 +7,6 @@ using Project.Reversi.View;
 
 namespace Project.Photon
 {
-
-
     public class PhotonGate : MonoBehaviourPunCallbacks
     {
         [SerializeField] ReversiView _reversiView;

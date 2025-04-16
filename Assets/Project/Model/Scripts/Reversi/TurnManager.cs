@@ -6,7 +6,7 @@ namespace Project.Reversi.Model
     public class TurnManager<T> where T : Enum
     {
         readonly int TurnAmount;
-        int _currentIndex = 0;
+        int _currentIndex;
         public T Current { get; private set; }
 
         public TurnManager(int turnAmount = 2)

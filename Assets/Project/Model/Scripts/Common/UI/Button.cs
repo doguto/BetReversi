@@ -12,7 +12,7 @@ namespace Project.Common.Model
 
     public class CheckButtonModel : ButtonModelBase
     {
-        public bool isChecked = false;
+        public bool isChecked;
 
         internal CheckButtonModel()
         {
@@ -23,8 +23,8 @@ namespace Project.Common.Model
 
     public class UpDownButtonModel : ButtonModelBase
     {
-        Subject<bool> _destroyer = new Subject<bool>();
-        public IObservable<bool> Destroyer => _destroyer;
+        readonly Subject<bool> destroyer = new();
+        public IObservable<bool> Destroyer => destroyer;
 
         public int Value { get; set; }
 
@@ -35,12 +35,12 @@ namespace Project.Common.Model
 
         internal void Destroy()
         {
-            _destroyer.OnNext(true);
+            destroyer.OnNext(true);
         }
 
         ~UpDownButtonModel()
         {
-            _destroyer.OnNext(true);
+            destroyer.OnNext(true);
         }
     }
 }

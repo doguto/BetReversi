@@ -8,16 +8,16 @@ namespace Project.Reversi.Presenter
 {
     public class ReversiPresenter
     {
-        readonly Vector3 UpDownButtonLeftPosition = new Vector3(-1.7f, 0, 0);
-        readonly Vector3 CheckButtonLeftPosition = new Vector3(-0.8f, 0, 0);
-        readonly Vector3 UpDownButtonRightPosition = new Vector3(0.8f, 0, 0);
-        readonly Vector3 CheckButtonRightPosition = new Vector3(1.7f, 0, 0);
+        readonly Vector3 UpDownButtonLeftPosition = new(-1.7f, 0, 0);
+        readonly Vector3 CheckButtonLeftPosition = new(-0.8f, 0, 0);
+        readonly Vector3 UpDownButtonRightPosition = new(0.8f, 0, 0);
+        readonly Vector3 CheckButtonRightPosition = new(1.7f, 0, 0);
 
-        public ReactiveCollection<OthelloPresenter> OthelloPresenters { get; private set; } = new ReactiveCollection<OthelloPresenter>();
-        private Subject<ResultMessage> _resultSubject = new Subject<ResultMessage>();
+        public ReactiveCollection<OthelloPresenter> OthelloPresenters { get; private set; } = new();
+        private Subject<ResultMessage> _resultSubject = new();
         public IObservable<ResultMessage> ResultSubject => _resultSubject;
 
-        public ButtonBuilder ButtonBuilder { get; private set; } = new ButtonBuilder();
+        public ButtonBuilder ButtonBuilder { get; private set; } = new();
 
         public ReversiPresenter()
         {
@@ -33,9 +33,9 @@ namespace Project.Reversi.Presenter
 
         void SetOthello(SetOthelloMessage message)
         {
-            OthelloPresenter presenter = new OthelloPresenter(message.Position, message.Color, message.Byplayer);
+            OthelloPresenter presenter = new OthelloPresenter(message.Position, message.Color, message.ByPlayer);
             OthelloPresenters.Add(presenter);
-            if (!message.Byplayer) return;
+            if (!message.ByPlayer) return;
             
             CheckButtonPresenter checkButtonPresenter = new CheckButtonPresenter(message.ConfirmButtonModel);
             UpDownButtonPresenter upDownButtonPresenter = new UpDownButtonPresenter(message.UpDownButtonModel);

@@ -6,13 +6,13 @@ using System.Globalization;
 
 public static class SharedPropertyGate
 {
-    private const string _setOthelloPositionKey = "OthelloPosition";
+    const string SetOthelloPositionKey = "OthelloPosition";
 
-    private static readonly Hashtable _setOthelloPosition = new Hashtable();
+    static readonly Hashtable SetOthelloPosition = new();
 
     public static Vector2Int GetSetOthelloPosition(this Player player)
     {
-        return (player.CustomProperties[_setOthelloPositionKey] is Vector2Int setOthelloPosition)? 
+        return (player.CustomProperties[SetOthelloPositionKey] is Vector2Int setOthelloPosition)? 
             setOthelloPosition : new Vector2Int(-1, -1);
     }
 }

@@ -1,23 +1,24 @@
 using Project.Main;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Project.Common.View
 {
     [ExecuteAlways]
     public class CameraAspect : MonoBehaviour
     {
-        [SerializeField] private Camera _targetCamera;
+        [SerializeField] Camera targetCamera;
 
         // [SerializeField] Vector2 _aspect;
-        readonly Vector2 Origin = new Vector2(0.5f, 0); // 画面の中心
+        readonly Vector2 Origin = new(0.5f, 0); // 画面の中心
 
 
         private void Awake()
         {
-            float currentAspect = Screen.width / (float)Screen.height;
-            float targetAspect = Main.Main.Aspect.x / Main.Main.Aspect.y;
-            float targetRate = targetAspect / currentAspect;
-            Rect viewRect = new Rect(0, 0, 1, 1);
+            var currentAspect = Screen.width / (float)Screen.height;
+            var targetAspect = Main.Main.Aspect.x / Main.Main.Aspect.y;
+            var targetRate = targetAspect / currentAspect;
+            var viewRect = new Rect(0, 0, 1, 1);
 
             if (targetRate < 1)
             {
@@ -30,7 +31,7 @@ namespace Project.Common.View
                 viewRect.y = Origin.x - viewRect.height * 0.5f;
             }
 
-            _targetCamera.rect = viewRect;
+            targetCamera.rect = viewRect;
         }
     }
 }

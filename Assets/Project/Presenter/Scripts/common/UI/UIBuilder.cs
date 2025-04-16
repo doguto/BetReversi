@@ -12,11 +12,11 @@ namespace Project.Common.Presenter
 
     public class ButtonBuilder
     {
-        public ReactiveCollection<ButtonInfo> _buttonPresenters = new ReactiveCollection<ButtonInfo>();
+        public ReactiveCollection<ButtonInfo> _buttonPresenters = new();
 
         internal void BuildNewButton(ButtonPresenterBase button, Vector3 position, Vector3 sparePosition = default)
         {
-            ButtonInfo buttonInfo = new ButtonInfo(button, position, sparePosition);
+            var buttonInfo = new ButtonInfo(button, position, sparePosition);
             _buttonPresenters.Add(buttonInfo);
         }
     }

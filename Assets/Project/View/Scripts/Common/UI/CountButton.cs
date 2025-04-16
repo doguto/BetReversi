@@ -7,7 +7,7 @@ namespace Project.Common.View
     {
         int _max = 0;
         int _min = 0;
-        public ReactiveProperty<int> Count { get; private set; } = new ReactiveProperty<int>(0);
+        public ReactiveProperty<int> Count { get; private set; } = new (0);
 
         protected void Init(int max = 0, int min = 0)
         {

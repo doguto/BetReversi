@@ -9,8 +9,6 @@ public class testRPC : MonoBehaviourPunCallbacks
     [SerializeField] GameObject _hoge;
     [SerializeField] PhotonView _photonView;
 
-    //int _hoge = 0;
-    float _last = 0;
     private void Update()
     {
         Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

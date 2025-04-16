@@ -9,9 +9,9 @@ namespace Project.Reversi.Model
 
         internal ResultMessage(OthelloColor winnerColor, int whiteAmount, int blackAmount)
         {
-            this.WinnerColor = winnerColor;
-            this.WhiteAmount = whiteAmount;
-            this.BlackAmount = blackAmount;
+            WinnerColor = winnerColor;
+            WhiteAmount = whiteAmount;
+            BlackAmount = blackAmount;
         }
     }
 }

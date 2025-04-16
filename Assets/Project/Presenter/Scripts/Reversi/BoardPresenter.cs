@@ -7,8 +7,8 @@ namespace Project.Reversi.Presenter
 {
     public class BoardPresenter
     {
-        private Subject<Vector2Int> _mouseInput;
-        private Subject<Vector2Int> _opponentInput;
+        Subject<Vector2Int> _mouseInput;
+        Subject<Vector2Int> _opponentInput;
         public IObserver<Vector2Int> MouseInput => _mouseInput;
         public IObserver<Vector2Int> OpponentInput => _opponentInput;
 

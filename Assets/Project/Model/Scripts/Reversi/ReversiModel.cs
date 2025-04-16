@@ -9,34 +9,34 @@ namespace Project.Reversi.Model
 {
     public static class ReversiModel
     {
-        public static readonly OthelloColor White = OthelloColor.white;
-        public static readonly OthelloColor Black = OthelloColor.black;
-        public static readonly OthelloColor None = OthelloColor.None;
+        public const OthelloColor White = OthelloColor.white;
+        public const OthelloColor Black = OthelloColor.black;
+        public const OthelloColor None = OthelloColor.None;
 
-        public static readonly OthelloColor FirstTurn = OthelloColor.black;
-        public static readonly int Length = 8;
-        public static readonly int MaxBetAmount = 10;
-        public static readonly int DefaultOthelloAmount = 32;
+        public const OthelloColor FirstTurn = OthelloColor.black;
+        public const int Length = 8;
+        public const int MaxBetAmount = 10;
+        public const int DefaultOthelloAmount = 32;
         
-        public static readonly int ReversiWinnerReward = 10;
-        public static readonly int BetWinBaseAmount = 20;  // 自身の獲得した面数のこの数字に対する比率を獲得したオセロの枚数にかける。
+        public const int ReversiWinnerReward = 10;
+        public const int BetWinBaseAmount = 20;  // 自身の獲得した面数のこの数字に対する比率を獲得したオセロの枚数にかける。
 
-        private static readonly TurnManager<OthelloColor> Turn;
-        private static readonly BoardModel Board;
-        private static ReversiPlayer _player;
+        static readonly TurnManager<OthelloColor> Turn;
+        static readonly BoardModel Board;
+        static ReversiPlayer _player;
 
-        private static Subject<SetOthelloMessage> _setOthelloMessage = new Subject<SetOthelloMessage>();
-        private static Subject<ChangeColorMessage> _changeColorMessage = new Subject<ChangeColorMessage>();
-        private static Subject<ResultMessage> _resultMessage = new Subject<ResultMessage>();
+        static readonly Subject<SetOthelloMessage> setOthelloMessage = new();
+        static readonly Subject<ChangeColorMessage> changeColorMessage = new();
+        static readonly Subject<ResultMessage> resultMessage = new();
 
-        public static IObservable<SetOthelloMessage> SetOthelloMessage => _setOthelloMessage;
-        public static IObservable<ChangeColorMessage> ChangeColorMessage => _changeColorMessage;
-        public static IObservable<ResultMessage> ResultMessage => _resultMessage;
+        public static IObservable<SetOthelloMessage> SetOthelloMessage => setOthelloMessage;
+        public static IObservable<ChangeColorMessage> ChangeColorMessage => changeColorMessage;
+        public static IObservable<ResultMessage> ResultMessage => resultMessage;
 
-        private static List<Vector2Int> _puttableGrids = new List<Vector2Int>();
-        private static bool _isStarted = false;
-        private static bool _isSoloGame = false;
-        private static bool _canNotSet = false;
+        static List<Vector2Int> _emptyGrids = new();
+        static bool _isStarted;
+        static bool _isSoloGame;
+        static bool _canNotSet;
 
 
         static ReversiModel()
@@ -57,7 +57,7 @@ namespace Project.Reversi.Model
 
             Board.Initialize();
             Turn.Start(FirstTurn);
-            _puttableGrids = Board.GetPuttableGrid(FirstTurn);
+            _emptyGrids = Board.GetPuttableGrid(FirstTurn);
             _isStarted = true;
 
             StartTurn();
@@ -67,17 +67,17 @@ namespace Project.Reversi.Model
         {
             if (_player.PlayerColor != Turn.Current) return;        
             if (Board.HasOthello(position)) return;
-            if (_isStarted && !_puttableGrids.Contains(position)) return;
+            if (_isStarted && !_emptyGrids.Contains(position)) return;
 
-            UpDownButtonModel upDownButton = new UpDownButtonModel();
-            CheckButtonModel confirmationButton = new CheckButtonModel();
+            var upDownButton = new UpDownButtonModel();
+            var confirmationButton = new CheckButtonModel();
             var message = new SetOthelloMessage(position, Turn.Current, confirmationButton, upDownButton);
-            _setOthelloMessage.OnNext(message);
+            setOthelloMessage.OnNext(message);
             await UniTask.WaitUntil(() => confirmationButton.isChecked);  // confirmButtonの入力をUniRxを介して受け取る。
             Board.SetOthello(position, Turn.Current, upDownButton.Value);
             upDownButton.Destroy();
 
-            List<Vector2Int> changeOthellos = new List<Vector2Int>();
+            var changeOthellos = new List<Vector2Int>();
             changeOthellos = Board.GetChangeOthello(position, Turn.Current);
             if (changeOthellos.Count == 0) return;
 
@@ -103,11 +103,11 @@ namespace Project.Reversi.Model
         internal static void SetOthello(Vector2Int position, OthelloColor color, int betAmount = 1, bool byPlayer = false)
         {
             if (Board.HasOthello(position)) return;
-            if (_isStarted && !_puttableGrids.Contains(position)) return;
+            if (_isStarted && !_emptyGrids.Contains(position)) return;
 
             var message = new SetOthelloMessage(position, color, byPlayer);
             Board.SetOthello(position, color, betAmount);
-            _setOthelloMessage.OnNext(message);
+            setOthelloMessage.OnNext(message);
 
             List<Vector2Int> changeOthellos = Board.GetChangeOthello(position, color);
             if (changeOthellos.Count == 0) return;
@@ -126,13 +126,13 @@ namespace Project.Reversi.Model
 
             var message = new ChangeColorMessage(position);
             Board.ChangeColor(position);
-            _changeColorMessage.OnNext(message);
+            changeColorMessage.OnNext(message);
         }
 
         static void StartTurn()
         {
-            _puttableGrids = Board.GetPuttableGrid(Turn.Current);
-            if (_puttableGrids.Count == 0)
+            _emptyGrids = Board.GetPuttableGrid(Turn.Current);
+            if (_emptyGrids.Count == 0)
             {
                 Debug.Log("Player '" + Turn.Current + "' can't put any othello.");
                 if (_canNotSet)
@@ -153,7 +153,7 @@ namespace Project.Reversi.Model
 
             // wait a NPC Input.
             // Debug.Log("NPC's turn");
-            NPC.SetRandomPosition(_puttableGrids);
+            NPC.SetRandomPosition(_emptyGrids);
         }
 
         static void ShowResultDebug(OthelloColor winner)
@@ -200,9 +200,9 @@ namespace Project.Reversi.Model
             ShowResultDebug(winnerColor);
 
             ResultMessage result = new ResultMessage(winnerColor, whiteAmount, blackAmount);
-            _resultMessage.OnNext(result);
+            resultMessage.OnNext(result);
 
-            var wait = Interval.Deray(5000);
+            var wait = Interval.Delay(5000);
             await wait;
             Debug.Log("App is Over.");
 

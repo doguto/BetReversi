@@ -16,7 +16,7 @@ namespace Project.Reversi.View
             _presenter = new BoardPresenter();
         }
 
-        private void OnMouseDown()
+        void OnMouseDown()
         {
             if (_presenter == null) return;
 

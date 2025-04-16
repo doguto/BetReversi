@@ -14,7 +14,7 @@ namespace Project.Reversi.Model
             var wait = SetDeray();
             await wait;
 
-            int randomIndex = Random.Range(0, positions.Count - 1);
+            var randomIndex = Random.Range(0, positions.Count - 1);
             ReversiModel.SetOthello(positions[randomIndex]);
         }
 
@@ -27,7 +27,7 @@ namespace Project.Reversi.Model
 
     public class ReversiPlayer
     {
-        protected readonly int _minOthelloAmount = 0;
+        protected readonly int minOthelloAmount = 0;
 
         internal OthelloColor PlayerColor { get; private set; }
         internal int CurrentOthelloAmount { get; private set; } = 0;
@@ -40,7 +40,7 @@ namespace Project.Reversi.Model
 
         internal void UseOthello(int usedAmount)
         {
-            if (CurrentOthelloAmount - usedAmount < _minOthelloAmount)
+            if (CurrentOthelloAmount - usedAmount < minOthelloAmount)
             {
                 Debug.LogError("Don't use Othello over the amount you have.");  
                 return;

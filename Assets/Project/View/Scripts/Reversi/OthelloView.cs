@@ -10,7 +10,7 @@ namespace Project.Reversi.View
 {
     public class OthelloView : MonoBehaviour
     {
-        readonly Vector3 RotateVector = new Vector3(0, 180, 0);
+        readonly Vector3 RotateVector = new(0, 180, 0);
         readonly float RotateTime = 0.5f;
 
         OthelloPresenter _presenter;

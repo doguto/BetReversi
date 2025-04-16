@@ -9,7 +9,7 @@ namespace Project.Reversi.Presenter
         public readonly Vector2Int Position;
         public readonly int Amount = 1;
         public readonly bool ByPlayer = true;
-        public ReactiveProperty<OthelloColor> Color { get; private set; } = new ReactiveProperty<OthelloColor>();
+        public ReactiveProperty<OthelloColor> Color { get; private set; } = new();
 
 
         public OthelloPresenter(Vector2Int position, OthelloColor color, bool byPlayer = true)

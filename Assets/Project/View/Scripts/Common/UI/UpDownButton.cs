@@ -2,17 +2,18 @@ using UnityEngine;
 using UniRx;
 using TMPro;
 using Project.Common.Presenter;
+using UnityEngine.Serialization;
 
 namespace Project.Common.View
 {
     public class UpDownButton : MonoBehaviour
     {
-        [SerializeField] CountButton _upButton;
-        [SerializeField] CountButton _downButton;
+        [SerializeField] CountButton upButton;
+        [SerializeField] CountButton downButton;
 
         UpDownButtonPresenter _presenter;
         // [SerializeField] Text _text;
-        [SerializeField] TextMeshProUGUI _text;
+        [SerializeField] TextMeshProUGUI text;
         
         int _max;
         int _min;
@@ -41,13 +42,13 @@ namespace Project.Common.View
             ShowValue();
 
             _presenter.Destroyer.Subscribe(_ => Destroy());
-            _upButton.Count.Subscribe(_ => Value++);
-            _downButton.Count.Subscribe(_ => Value--);
+            upButton.Count.Subscribe(_ => Value++);
+            downButton.Count.Subscribe(_ => Value--);
         }
 
         public void ShowValue()
         {
-            _text.text = _value.ToString();
+            text.text = _value.ToString();
         }
         
         // internal int GetValue()

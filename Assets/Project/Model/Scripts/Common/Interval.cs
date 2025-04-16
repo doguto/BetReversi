@@ -4,7 +4,7 @@ namespace Project.Common.Model
 {
     internal static class Interval
     {
-        internal static async Task Deray(int derayTime)
+        internal static async Task Delay(int derayTime)
         {
             await Task.Delay(1000);
         }

@@ -36,7 +36,7 @@ namespace Project.Common.Presenter
 
     public class UpDownButtonPresenter : ButtonPresenterBase
     {
-        Subject<bool> _destroyer = new Subject<bool>();
+        Subject<bool> _destroyer = new();
         public IObservable<bool> Destroyer => _destroyer;
 
         UpDownButtonModel _model;

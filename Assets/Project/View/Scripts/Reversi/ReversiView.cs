@@ -4,6 +4,7 @@ using Project.Reversi.Presenter;
 using Project.Reversi.Model;
 using Project.Common.Presenter;
 using Project.Common.View;
+using UnityEngine.Serialization;
 
 namespace Project.Reversi.View
 {
@@ -11,10 +12,10 @@ namespace Project.Reversi.View
     {
         readonly Vector3 WhiteAngle = new Vector3(0, 180, 0);
 
-        [SerializeField] GameObject _othelloPrefab; // Up is black.
-        [SerializeField] GameObject _upDownButton;
-        [SerializeField] GameObject _confirmButton;
-        [SerializeField] BoardView _boardView;
+        [SerializeField] GameObject othelloPrefab; // Up is black.
+        [SerializeField] GameObject upDownButtonPrefab;
+        [SerializeField] GameObject confirmButtonPrefab;
+        [SerializeField] BoardView boardView;
 
         ReversiPresenter _presenter;
         OthelloColor _playerColor = OthelloColor.white; // temp
@@ -24,7 +25,7 @@ namespace Project.Reversi.View
         internal void InitializeReversi(bool isSoloGame = true, bool isFirstIn = true)
         {
             _isSoloGame = isSoloGame;
-            _boardView.InitializeBoard();
+            boardView.InitializeBoard();
 
             if (!_isSoloGame) DecidePlayerColor(isFirstIn);
 
@@ -38,7 +39,7 @@ namespace Project.Reversi.View
         void SetOthello(CollectionAddEvent<OthelloPresenter> presenter)
         {
             Vector3 position = new Vector3(presenter.Value.Position.x, presenter.Value.Position.y, 0);
-            var othello = Instantiate(_othelloPrefab, position, Quaternion.identity);
+            var othello = Instantiate(othelloPrefab, position, Quaternion.identity);
             if (presenter.Value.Color.Value == OthelloColor.white)
             {
                 othello.transform.localEulerAngles = WhiteAngle;
@@ -53,14 +54,14 @@ namespace Project.Reversi.View
 
             if (buttonInfo.Value.ButtonPresenter is CheckButtonPresenter)
             {
-                GameObject confirmObj = Instantiate(_confirmButton, buttonPos, Quaternion.identity);
+                GameObject confirmObj = Instantiate(confirmButtonPrefab, buttonPos, Quaternion.identity);
                 CheckButton checkButton = confirmObj.GetComponentInChildren<CheckButton>();
                 checkButton.Init(buttonInfo.Value.ButtonPresenter as CheckButtonPresenter);
                 return;
             }
             if (buttonInfo.Value.ButtonPresenter is UpDownButtonPresenter)
             {
-                GameObject upDownObj = Instantiate(_upDownButton, buttonPos, Quaternion.identity);
+                GameObject upDownObj = Instantiate(upDownButtonPrefab, buttonPos, Quaternion.identity);
                 UpDownButton upDownButton = upDownObj.GetComponent<UpDownButton>();
                 upDownButton.Init(buttonInfo.Value.ButtonPresenter as UpDownButtonPresenter, 1, 1, ReversiModel.MaxBetAmount);
                 return;
