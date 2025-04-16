@@ -6,7 +6,8 @@ namespace Project.Reversi.Model
     internal class BoardModel
     {
         readonly OthelloModel[,] grid;
-        readonly Vector2Int[] direction =
+
+        readonly Vector2Int[] directions =
         {
             new(0, 1), //north
             new(1, 1),
@@ -22,14 +23,14 @@ namespace Project.Reversi.Model
         internal List<Vector2Int> SettablePositions { get; private set; }
 
         bool _isStarted;
-        
+
 
         internal BoardModel()
         {
             grid = new OthelloModel[ReversiModel.Length, ReversiModel.Length];
-            for (int x = 0; x < ReversiModel.Length; x++)
+            for (var x = 0; x < ReversiModel.Length; x++)
             {
-                for (int y = 0; y < ReversiModel.Length; y++)
+                for (var y = 0; y < ReversiModel.Length; y++)
                 {
                     grid[x, y] = new OthelloModel();
                 }
@@ -67,19 +68,19 @@ namespace Project.Reversi.Model
             if (setCandidates.Count == 0) return puttablePositions;
 
             // Maybe, this is Not good algorithm.
-            foreach (Vector2Int candidate in setCandidates)
+            foreach (var candidate in setCandidates)
             {
-                for (int i = 0; i < direction.Length; i++)
+                for (var i = 0; i < directions.Length; i++)
                 {
                     var pos = candidate;
                     var canOut = false;
-                    for (int j = 1; j < ReversiModel.Length; j++)
-                    {   
-                        pos += direction[i];
+                    for (var j = 1; j < ReversiModel.Length; j++)
+                    {
+                        pos += directions[i];
                         if (!HasOthello(pos)) break;
 
                         var isSame = grid[pos.x, pos.y].Color == turnColor;
-                        if(j == 1)
+                        if (j == 1)
                         {
                             if (isSame) break;
                             continue;
@@ -105,30 +106,31 @@ namespace Project.Reversi.Model
 
             if (!IsInGrid(putPosition)) return changeGrids;
 
-            for (int i = 0; i < direction.Length; i++)
+            foreach (var direction in directions)
             {
-                Vector2Int pos = putPosition;
-                for (int j = 1; j < 8; j++)
+                var pos = putPosition;
+                for (var i = 1; i < 8; i++)
                 {
-                    pos += direction[i];
+                    pos += direction;
                     if (!IsInGrid(pos)) break;
                     if (!HasOthello(pos)) break;
 
-                    bool isSame = grid[pos.x, pos.y].Color == putColor;
-                    if (j == 1)
+                    var isSame = grid[pos.x, pos.y].Color == putColor;
+                    if (i == 1)
                     {
                         if (isSame) break;
                         continue;
                     }
+
                     if (!isSame) continue;
 
                     // sameColor othello merges in first time.
-                    int lim = j;
-                    for (int k = 1; k < lim; k++)
+                    for (var j = 1; j < i; j++)
                     {
-                        Vector2Int change = putPosition + k * direction[i];
+                        Vector2Int change = putPosition + j * direction;
                         changeGrids.Add(change);
                     }
+
                     break;
                 }
             }
@@ -139,11 +141,11 @@ namespace Project.Reversi.Model
         internal int GetOthelloAmount(OthelloColor color)
         {
             var amount = 0;
-            for (int y = 0; y < ReversiModel.Length; y++)
+            for (var y = 0; y < ReversiModel.Length; y++)
             {
-                for (int x = 0; x < ReversiModel.Length; x++)
+                for (var x = 0; x < ReversiModel.Length; x++)
                 {
-                    OthelloColor gridColor = grid[x, y].Color;
+                    var gridColor = grid[x, y].Color;
                     if (gridColor != color) continue;
 
                     amount += grid[x, y].Amount;
@@ -155,13 +157,13 @@ namespace Project.Reversi.Model
 
         void UpdateSetCandidate(Vector2Int position)
         {
-            for (int i = -1; i <= 1; i++)
+            for (var i = -1; i <= 1; i++)
             {
-                for (int j = -1; j <= 1; j++) // 9 times loop
+                for (var j = -1; j <= 1; j++) // 9 times loop
                 {
                     if (i == 0 && j == 0) continue;
 
-                    Vector2Int researchPosition = new Vector2Int(position.x + i, position.y + j);
+                    var researchPosition = new Vector2Int(position.x + i, position.y + j);
                     if (!IsInGrid(researchPosition)) continue;
                     if (HasOthello(researchPosition)) continue;
 
@@ -174,8 +176,8 @@ namespace Project.Reversi.Model
 
         bool IsInGrid(Vector2Int position)
         {
-            bool isInX = 0 <= position.x && position.x < ReversiModel.Length;
-            bool isInY = 0 <= position.y && position.y < ReversiModel.Length;
+            var isInX = 0 <= position.x && position.x < ReversiModel.Length;
+            var isInY = 0 <= position.y && position.y < ReversiModel.Length;
 
             return isInX && isInY;
         }

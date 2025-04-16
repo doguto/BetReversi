@@ -10,8 +10,8 @@ namespace Project.Reversi.View
 {
     public class OthelloView : MonoBehaviour
     {
-        readonly Vector3 RotateVector = new(0, 180, 0);
-        readonly float RotateTime = 0.5f;
+        readonly Vector3 rotateVector = new(0, 180, 0);
+        const float RotateTime = 0.5f;
 
         OthelloPresenter _presenter;
         Transform _transform;
@@ -32,7 +32,7 @@ namespace Project.Reversi.View
                     return;
                 }
 
-                _transform.DOLocalRotate(_transform.localEulerAngles + RotateVector, RotateTime);
+                _transform.DOLocalRotate(_transform.localEulerAngles + rotateVector, RotateTime);
             });
         }
     }

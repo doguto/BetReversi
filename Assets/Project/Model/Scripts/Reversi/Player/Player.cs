@@ -27,11 +27,11 @@ namespace Project.Reversi.Model
 
     public class ReversiPlayer
     {
-        protected readonly int minOthelloAmount = 0;
+        protected const int MinOthelloAmount = 0;
 
         internal OthelloColor PlayerColor { get; private set; }
         internal int CurrentOthelloAmount { get; private set; } = 0;
-        
+
         internal ReversiPlayer(OthelloColor color, int othelloAmount)
         {
             PlayerColor = color;
@@ -40,9 +40,9 @@ namespace Project.Reversi.Model
 
         internal void UseOthello(int usedAmount)
         {
-            if (CurrentOthelloAmount - usedAmount < minOthelloAmount)
+            if (CurrentOthelloAmount - usedAmount < MinOthelloAmount)
             {
-                Debug.LogError("Don't use Othello over the amount you have.");  
+                Debug.LogError("Don't use Othello over the amount you have.");
                 return;
             }
 

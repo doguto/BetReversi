@@ -4,13 +4,14 @@ using Photon.Realtime;
 using System.Threading.Tasks;
 using System.Threading;
 using Project.Reversi.View;
+using UnityEngine.Serialization;
 
 namespace Project.Photon
 {
     public class PhotonGate : MonoBehaviourPunCallbacks
     {
-        [SerializeField] ReversiView _reversiView;
-        readonly int MaxPlayerAmount = 2;
+        [SerializeField] ReversiView reversiView;
+        const int MaxPlayerAmount = 2;
 
         bool _isStarted = false;
 
@@ -37,7 +38,7 @@ namespace Project.Photon
             _isStarted = true;
             PhotonNetwork.Instantiate("photon", Vector3.zero, Quaternion.identity);
             Debug.Log("Starting Game");
-            _reversiView.InitializeReversi(isSoloGame, isFirstIn);
+            reversiView.InitializeReversi(isSoloGame, isFirstIn);
         }
 
         private async Task StartSoloGame()

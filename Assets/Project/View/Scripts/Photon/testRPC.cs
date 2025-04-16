@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Serialization;
 
-[RequireComponent (typeof(PhotonView))]
+[RequireComponent(typeof(PhotonView))]
 public class testRPC : MonoBehaviourPunCallbacks
 {
-    [SerializeField] GameObject _hoge;
-    [SerializeField] PhotonView _photonView;
+    [SerializeField] GameObject hoge;
+    [SerializeField] PhotonView photonView;
 
     private void Update()
     {
         Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (Input.GetMouseButton(0))
         {
-            _photonView.RPC(nameof(WriteDebug), RpcTarget.All, pos);
+            photonView.RPC(nameof(WriteDebug), RpcTarget.All, pos);
         }
     }
 
@@ -23,6 +24,6 @@ public class testRPC : MonoBehaviourPunCallbacks
     {
         pos.z = 0;
         Debug.Log("hoge from :" + info.Sender);
-        Instantiate(_hoge, pos, Quaternion.identity);
+        Instantiate(hoge, pos, Quaternion.identity);
     }
 }

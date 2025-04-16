@@ -8,7 +8,7 @@ namespace Project.Reversi.Presenter
     {
         public readonly Vector2Int Position;
         public readonly int Amount = 1;
-        public readonly bool ByPlayer = true;
+        public readonly bool ByPlayer;
         public ReactiveProperty<OthelloColor> Color { get; private set; } = new();
 
 
@@ -24,12 +24,11 @@ namespace Project.Reversi.Presenter
             if (Color.Value == OthelloColor.black)
             {
                 Color.Value = OthelloColor.white;
-            } 
+            }
             else
             {
                 Color.Value = OthelloColor.black;
             }
         }
     }
-
 }

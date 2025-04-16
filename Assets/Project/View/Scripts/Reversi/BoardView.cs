@@ -6,8 +6,8 @@ using Project.Reversi.Presenter;
 namespace Project.Reversi.View
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent (typeof(Collider2D))]
-    public class BoardView : MonoBehaviour 
+    [RequireComponent(typeof(Collider2D))]
+    public class BoardView : MonoBehaviour
     {
         BoardPresenter _presenter;
 
@@ -19,9 +19,10 @@ namespace Project.Reversi.View
         void OnMouseDown()
         {
             if (_presenter == null) return;
+            if (Camera.main == null) return;
 
-            Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2Int grid = new Vector2Int((int)Mathf.Round(position.x), (int)Mathf.Round(position.y));
+            var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var grid = new Vector2Int((int)Mathf.Round(position.x), (int)Mathf.Round(position.y));
             _presenter.MouseInput.OnNext(grid);
         }
     }

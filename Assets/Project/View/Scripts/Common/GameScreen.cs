@@ -24,20 +24,20 @@ namespace Project.Common.View
         // Screenの端ギリギリの場合は範囲外とみなす。
         static bool IsInScreen(Vector3 position)
         {
-            Vector3 screenPosition = _mainCamera.WorldToScreenPoint(position); // 左下を原点とし、画素数を座標としたもの
+            var screenPosition = _mainCamera.WorldToScreenPoint(position); // 左下を原点とし、画素数を座標としたもの
 
-            Vector3 screenLeftButtom = new Vector3(Screen.width * _mainCamera.rect.xMin,
+            var screenLeftButtom = new Vector3(Screen.width * _mainCamera.rect.xMin,
                 Screen.height * _mainCamera.rect.yMin, 0);
-            Vector3 screenRightTop = new Vector3(Screen.width * _mainCamera.rect.xMax,
+            var screenRightTop = new Vector3(Screen.width * _mainCamera.rect.xMax,
                 Screen.height * _mainCamera.rect.yMax, 0);
 
             // 画面の端ギリギリはタッチしにくいので、少し内側にする。
-            Vector3 screenRange = screenRightTop - screenLeftButtom;
+            var screenRange = screenRightTop - screenLeftButtom;
             screenLeftButtom += screenRange * 0.1f;
             screenRightTop -= screenRange * 0.1f;
 
-            bool xIn = screenLeftButtom.x < screenPosition.x && screenPosition.x < screenRightTop.x;
-            bool yIn = screenLeftButtom.y < screenPosition.y && screenPosition.y < screenRightTop.y;
+            var xIn = screenLeftButtom.x < screenPosition.x && screenPosition.x < screenRightTop.x;
+            var yIn = screenLeftButtom.y < screenPosition.y && screenPosition.y < screenRightTop.y;
             return xIn && yIn;
         }
     }

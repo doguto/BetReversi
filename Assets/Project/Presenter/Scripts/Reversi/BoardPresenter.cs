@@ -7,23 +7,20 @@ namespace Project.Reversi.Presenter
 {
     public class BoardPresenter
     {
-        Subject<Vector2Int> _mouseInput;
-        Subject<Vector2Int> _opponentInput;
-        public IObserver<Vector2Int> MouseInput => _mouseInput;
-        public IObserver<Vector2Int> OpponentInput => _opponentInput;
+        readonly Subject<Vector2Int> mouseInput;
+        readonly Subject<Vector2Int> opponentInput;
+        public IObserver<Vector2Int> MouseInput => mouseInput;
+        public IObserver<Vector2Int> OpponentInput => opponentInput;
 
 
         public BoardPresenter()
         {
-            _mouseInput = new Subject<Vector2Int>();
-            _opponentInput = new Subject<Vector2Int>();
-            _mouseInput.Subscribe((pos) =>
+            mouseInput = new Subject<Vector2Int>();
+            opponentInput = new Subject<Vector2Int>();
+            mouseInput.Subscribe((pos) => { ReversiModel.SetPlayerOthello(pos); });
+            opponentInput.Subscribe((pos) =>
             {
-                ReversiModel.SetPlayerOthello(pos);
-            });
-            _opponentInput.Subscribe((pos) =>
-            {
-                Vector2Int transedPos = new Vector2Int(8 - pos.x, 8 - pos.y);
+                var transedPos = new Vector2Int(8 - pos.x, 8 - pos.y);
                 ReversiModel.SetOpponentOthello(transedPos);
             });
         }

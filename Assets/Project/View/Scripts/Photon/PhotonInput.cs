@@ -3,21 +3,22 @@ using Photon.Pun;
 using Photon.Realtime;
 using Project.Reversi.Model;
 using Project.Reversi.Presenter;
+using UnityEngine.Serialization;
 
 namespace Project.Photon
 {
     public class PhotonInput : MonoBehaviourPunCallbacks
     {
         ReversiPresenter _reversiPresenter;
-        [SerializeField] PhotonView _view;
+        [SerializeField] PhotonView view;
 
-        private void Update()
+        void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 input = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                Vector2 pos = new Vector2Int((int)Mathf.Round(input.x), (int)Mathf.Round(input.y));
-                _view.RPC(nameof(GetOthelloSetOperation), RpcTarget.Others, pos);
+                var input = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                var pos = new Vector2Int((int)Mathf.Round(input.x), (int)Mathf.Round(input.y));
+                view.RPC(nameof(GetOthelloSetOperation), RpcTarget.Others, pos);
             }
         }
 
@@ -39,14 +40,12 @@ namespace Project.Photon
         [PunRPC]
         internal void EndReversi()
         {
-
         }
 
         // ShowResult()���󂯎��֐�
         [PunRPC]
         internal void ShowResult()
         {
-
         }
 
 
@@ -55,9 +54,8 @@ namespace Project.Photon
             if (pos.x > 8 || pos.x < 0) return new Vector2Int(-1, -1);
             if (pos.y > 8 || pos.y < 0) return new Vector2Int(-1, -1);
 
-            Vector2Int switched = new Vector2Int(ReversiModel.Length - 1 - pos.x, ReversiModel.Length - 1 - pos.y);
+            var switched = new Vector2Int(ReversiModel.Length - 1 - pos.x, ReversiModel.Length - 1 - pos.y);
             return switched;
         }
-
     }
 }

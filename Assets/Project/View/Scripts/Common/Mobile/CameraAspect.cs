@@ -10,7 +10,7 @@ namespace Project.Common.View
         [SerializeField] Camera targetCamera;
 
         // [SerializeField] Vector2 _aspect;
-        readonly Vector2 Origin = new(0.5f, 0); // 画面の中心
+        readonly Vector2 origin = new(0.5f, 0); // 画面の中心
 
 
         private void Awake()
@@ -23,12 +23,12 @@ namespace Project.Common.View
             if (targetRate < 1)
             {
                 viewRect.width = targetRate;
-                viewRect.x = Origin.x - viewRect.width * 0.5f;
+                viewRect.x = origin.x - viewRect.width * 0.5f;
             }
             else
             {
                 viewRect.height = 1 / targetRate;
-                viewRect.y = Origin.x - viewRect.height * 0.5f;
+                viewRect.y = origin.x - viewRect.height * 0.5f;
             }
 
             targetCamera.rect = viewRect;
